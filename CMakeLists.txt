@@ -10,5 +10,7 @@ project(star_wars)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+enable_testing()
+
 add_subdirectory(src)
 add_subdirectory(test)

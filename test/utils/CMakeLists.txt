@@ -13,3 +13,5 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE utils GTest::gtest_main)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "test")
+
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
