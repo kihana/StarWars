@@ -2,7 +2,7 @@
 
 project("utils" LANGUAGES CXX)
 
-add_library(${PROJECT_NAME} STATIC "move.cpp" "include/utils/move.h")
+add_library(${PROJECT_NAME} STATIC "move.cpp" "include/utils/move.h" "rotate.cpp" "include/utils/rotate.h")
 
 if(CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
