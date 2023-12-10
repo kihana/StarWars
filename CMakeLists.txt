@@ -10,4 +10,4 @@ project(star_wars)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-add_subdirectory(server)
+add_subdirectory(src)
