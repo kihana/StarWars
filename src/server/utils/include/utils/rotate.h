@@ -11,6 +11,7 @@ struct Rotatable {
   virtual core::Vector GetPosition() const = 0;
   virtual void SetPosition(core::Vector position) = 0;
   virtual core::Angle GetAngle() const = 0;
+  virtual void SetAngle(core::Angle angle) = 0;
 };
 
 class Rotate {

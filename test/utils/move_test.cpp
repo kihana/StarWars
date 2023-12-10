@@ -31,6 +31,8 @@ TEST(Utils, MoveTest) {
   movable.SetVelocity({-7, 3});
   Move move(movable);
   move.Execute();
-
   EXPECT_TRUE(movable.GetPosition() == Vector(5, 8));
+
+  move.Execute();
+  EXPECT_TRUE(movable.GetPosition() == Vector(-2, 11));
 }
