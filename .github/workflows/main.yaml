@@ -18,6 +18,8 @@ jobs:
       - name: Configure solution
         run: |
           cd $GITHUB_WORKSPACE
+          echo $GITHUB_WORKSPACE
+          pwd
           conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_debug -pr:h=.\conan\windows_x64_debug
           conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_release -pr:h=.\conan\windows_x64_release
           cd build
