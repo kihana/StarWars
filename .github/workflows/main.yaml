@@ -11,7 +11,7 @@ jobs:
     name: build Star Wars application
     runs-on: windows-2022
     steps:
-      - name: Prepare environment (install conan)
+      - name: Set up build environment (install conan)
         run: pip install conan==1.54.0
       - name: Checkout source code of application
         uses: actions/checkout@v4
@@ -26,5 +26,6 @@ jobs:
       - name: Build solution
         run: |
           pwd | echo
+          cd build
           cmake --build . --config Release
           cmake --build . --config Debug
