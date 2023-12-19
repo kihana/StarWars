@@ -11,8 +11,15 @@ jobs:
     name: build Star Wars application
     runs-on: windows-2022
     steps:
-      - name: Prepare environment
+      - name: Prepare environment (install conan)
         run: pip install conan==1.54.0
-      - name: Checkout source code
+      - name: Checkout source code of application
         uses: actions/checkout@v4
+      - name: Configure solution
+        run: |
+          cd $GITHUB_WORKSPACE
+          conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_debug -pr:h=.\conan\windows_x64_debug
+          conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_release -pr:h=.\conan\windows_x64_release
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=.\conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
       
