@@ -7,8 +7,8 @@ on:
       - release/*
       - bugfix/*
 jobs:
-  build-app:
-    name: build Star Wars application
+  build-job:
+    name: Build application
     runs-on: windows-2022
     steps:
       - name: Set up build environment (install conan)
@@ -25,7 +25,19 @@ jobs:
           cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE="./conan_toolchain.cmake" -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
       - name: Build solution
         run: |
-          pwd | echo
           cd build
           cmake --build . --config Release
           cmake --build . --config Debug
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-artifacts
+          path: |
+            build/test/core/Release/*.exe
+            build/test/core/Debug/*.exe
+            build/test/utils/Release/*.exe
+            build/test/utils/Debug/*.exe
+          if-no-files-found: error
+  test-job:
+    name: Test application
+    needs: build-job
