@@ -33,10 +33,7 @@ jobs:
         with:
           name: application-artifacts
           path: |
-            build/test/core/Release/*.exe
-            build/test/core/Debug/*.exe
-            build/test/utils/Release/*.exe
-            build/test/utils/Debug/*.exe
+            build/test/(core|utils)/(Release|Debug)/*.exe
           if-no-files-found: error
   test-job:
     name: Test application
