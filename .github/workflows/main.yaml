@@ -40,4 +40,8 @@ jobs:
           if-no-files-found: error
   test-job:
     name: Test application
+    runs-on: windows-2022
     needs: build-job
+    steps:
+      - name: Download application artifacts
+        run: echo "Hello test job" 
