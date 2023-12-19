@@ -19,7 +19,9 @@ jobs:
         run: |
           echo "::debug::Hello world"
           Write-Output "::debug::Work dir: $env:GITHUB_WORKSPACE"
-          echo "::debug::Bye world"
+          echo "Bye world1"
+          echo $env:GITHUB_WORKSPACE
+          echo "Bye world2"
       #- name: Configure release conan
       #  run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_release -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_release
       #- name: Configure solution      
