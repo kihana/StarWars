@@ -25,6 +25,8 @@ jobs:
           pwd | echo
           echo "Bye world2"
           conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_release -pr:h=./conan/windows_x64_release
+          conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_debug -pr:h=./conan/windows_x64_debug
+          dir $env:GITHUB_WORKSPACE | echo
       #- name: Configure release conan
       #  run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_release -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_release
       #- name: Configure solution      
