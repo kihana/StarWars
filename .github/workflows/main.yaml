@@ -11,25 +11,23 @@ jobs:
     name: build Star Wars application
     runs-on: windows-2022
     steps:
-      - name: Prepare environment (install conan)
-        run: pip install conan==1.54.0
+      #- name: Prepare environment (install conan)
+      #  run: pip install conan==1.54.0
       - name: Checkout source code of application
         uses: actions/checkout@v4
       - name: Configure debug conan
         run: |
           Write-Output "::debug::Work dir: $env:GITHUB_WORKSPACE"
-          echo "::debug::Work dir: $GITHUB_WORKSPACE"
-          conan install ./conan -if=./build -of=./build --build=missing -pr:b=./conan/windows_x64_debug -pr:h=./conan/windows_x64_debug
-          working-directory: $env:GITHUB_WORKSPACE
-      - name: Configure release conan
-        run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_release -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_release
-      - name: Configure solution      
-        run: |
-          cd $GITHUB_WORKSPACE
-          echo $GITHUB_WORKSPACE
-          pwd
-          conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_debug -pr:h=.\conan\windows_x64_debug
-          conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_release -pr:h=.\conan\windows_x64_release
-          cd build
-          cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=.\conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
+          echo "::debug::Work dir: " $env:$GITHUB_WORKSPACE"
+      #- name: Configure release conan
+      #  run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_release -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_release
+      #- name: Configure solution      
+      #  run: |
+      #    cd $GITHUB_WORKSPACE
+      #    echo $GITHUB_WORKSPACE
+      #    pwd
+      #    conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_debug -pr:h=.\conan\windows_x64_debug
+      #    conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_release -pr:h=.\conan\windows_x64_release
+      #    cd build
+      #    cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=.\conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
       
