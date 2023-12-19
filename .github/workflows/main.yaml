@@ -15,7 +15,11 @@ jobs:
         run: pip install conan==1.54.0
       - name: Checkout source code of application
         uses: actions/checkout@v4
-      - name: Configure solution
+      - name: Configure debug conan
+        run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_debug -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_debug
+      - name: Configure release conan
+        run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_release -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_release
+      - name: Configure solution      
         run: |
           cd $GITHUB_WORKSPACE
           echo $GITHUB_WORKSPACE
