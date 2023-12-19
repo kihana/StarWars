@@ -33,8 +33,10 @@ jobs:
         with:
           name: application-artifacts
           path: |
-            build/test/core/(Release|Debug)/*.exe
-            build/test/utils/(Release|Debug)/*.exe
+            build/test/core/Release/*.exe
+            build/test/core/Debug/*.exe
+            build/test/utils/Release/*.exe
+            build/test/utils/Debug/*.exe
           if-no-files-found: error
   test-job:
     name: Test application
@@ -42,4 +44,8 @@ jobs:
     needs: build-job
     steps:
       - name: Download application artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: application-artifacts
+      - name: Run tests
         run: echo "Hello test job" 
