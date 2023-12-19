@@ -15,30 +15,16 @@ jobs:
         run: pip install conan==1.54.0
       - name: Checkout source code of application
         uses: actions/checkout@v4
-      - name: Configure debug conan
+      - name: Prepare solution dependencies
         run: |
-          echo "::debug::Hello world"
-          Write-Output "::debug::Work dir: $env:GITHUB_WORKSPACE"
-          echo "Bye world1"
-          echo $env:GITHUB_WORKSPACE
-          dir $env:GITHUB_WORKSPACE | echo
-          pwd | echo
-          echo "Bye world2"
           conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_release -pr:h=./conan/windows_x64_release
           conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_debug -pr:h=./conan/windows_x64_debug
-          dir $env:GITHUB_WORKSPACE | echo
+      - name: Configure and generate solution
+        run: |
           cd build
-          pwd | echo
           cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE="./conan_toolchain.cmake" -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
-      #- name: Configure release conan
-      #  run: conan install $GITHUB_WORKSPACE/conan -if=$GITHUB_WORKSPACE/build -of=$GITHUB_WORKSPACE/build --build=missing -pr:b=$GITHUB_WORKSPACE/conan/windows_x64_release -pr:h=$GITHUB_WORKSPACE/conan/windows_x64_release
-      #- name: Configure solution      
-      #  run: |
-      #    cd $GITHUB_WORKSPACE
-      #    echo $GITHUB_WORKSPACE
-      #    pwd
-      #    conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_debug -pr:h=.\conan\windows_x64_debug
-      #    conan install .\conan\ -if=build -of=build --build=missing -pr:b=.\conan\windows_x64_release -pr:h=.\conan\windows_x64_release
-      #    cd build
-      #    cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE=.\conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
-      
+      - name: Build solution
+        run: |
+          pwd | echo
+          cmake --build . --config Release
+          cmake --build . --config Debug
