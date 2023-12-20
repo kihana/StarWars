@@ -9,12 +9,6 @@ jobs:
     runs-on: windows-2022
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Set up test coverage calculation environment
-        run: |
-          Invoke-WebRequest -Uri "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe" -OutFile "OpenCppCoverageSetup.exe"
-          .\OpenCppCoverageSetup.exe /verysilent | Out-Null
-      - name: Checkout application source code
-        uses: actions/checkout@v4
       - name: Download solution artifacts
         uses: dawidd6/action-download-artifact@v3
         with:
@@ -25,11 +19,6 @@ jobs:
         run: |
           cd build
           ctest -C Release -V
-      - name: Generate test coverage report
-        run: |
-          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=binary:.\build\core.cov -- .\build\test\core\Debug\core_test.exe
-          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:CoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
-          dir -R CoverageReport | echo
   on-failure:
     name: Skip test application
     runs-on: windows-2022
