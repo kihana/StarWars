@@ -50,4 +50,4 @@ jobs:
       - name: Run tests
         run: |
           echo "Hello test job"
-          dir | echo
+          dir -R | echo
