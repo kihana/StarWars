@@ -1,0 +1,32 @@
+name: Test
+on:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
+jobs:
+  on-success:
+    name: Test application
+    runs-on: windows-2022
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Download solution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: solution-artifacts
+          path: build
+      - name: Run tests
+        run: |
+          echo "Hello test job"
+          dir -R | echo
+      - name: Test application
+        run: |
+          cd build
+          ctest -C Release -V
+          ctest -C Debug -V
+  on-failure:
+    name: Skip test application
+    runs-on: windows-2022
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Report skip reason
+        run: echo 'The triggering workflow failed'

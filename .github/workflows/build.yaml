@@ -1,4 +1,4 @@
-name: Build & Test
+name: Build
 on:
   push:
     branches:
@@ -39,22 +39,3 @@ jobs:
             build/test/utils/Debug/*.exe
             build/**/CTestTestfile.cmake
           if-no-files-found: error
-  test-job:
-    name: Test application
-    runs-on: windows-2022
-    needs: build-job
-    steps:
-      - name: Download solution artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: solution-artifacts
-          path: build
-      - name: Run tests
-        run: |
-          echo "Hello test job"
-          dir -R | echo
-      - name: Test application
-        run: |
-          cd build
-          ctest -C Release -V
-          ctest -C Debug -V
