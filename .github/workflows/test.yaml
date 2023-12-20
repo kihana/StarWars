@@ -25,9 +25,9 @@ jobs:
           ctest -C Release -V
       - name: Generate test coverage report
         run: |
-          cd build
-          'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources=$env:GITHUB_WORKSPACE/src --export_type=binary:core.cov -- .\test\core\Debug\core_test.exe
-          'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources=$env:GITHUB_WORKSPACE/src --input_coverage=core.cov -- .\test\utils\Debug\utils_test.exe
+          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=binary:.\build\core.cov -- .\build\test\core\Debug\core_test.exe
+          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:CoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
+          dir -R CoverageReport | echo
   on-failure:
     name: Skip test application
     runs-on: windows-2022
