@@ -5,12 +5,12 @@ on:
     types: [completed]
 jobs:
   on-success:
-    name: Test application
+    name: Test coverage calculation
     runs-on: windows-2022
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Set up test coverage calculation environment
-        run: wget https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe -outfile OpenCppCoverageSetup.exe
+        run: Invoke-WebRequest -Uri "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe" -OutFile "OpenCppCoverageSetup.exe"
       - name: Run tests
         run: |
           dir -R | echo
