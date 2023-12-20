@@ -1,0 +1,23 @@
+name: Calculate test coverage
+on:
+  workflow_run:
+    workflows: [Test]
+    types: [completed]
+jobs:
+  on-success:
+    name: Test application
+    runs-on: windows-2022
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Set up test coverage calculation environment
+        run: wget https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe -outfile OpenCppCoverageSetup.exe
+      - name: Run tests
+        run: |
+          dir -R | echo
+  on-failure:
+    name: Skip test coverage calculation
+    runs-on: windows-2022
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Report skip reason
+        run: echo 'The triggering Test workflow failed'
