@@ -32,10 +32,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: solution-artifacts
-          path: |
-            build/test/core/Release/*.exe
-            build/test/core/Debug/*.exe
-            build/test/utils/Release/*.exe
-            build/test/utils/Debug/*.exe
-            build/**/CTestTestfile.cmake
+          path: build
           if-no-files-found: error
