@@ -48,7 +48,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: solution-artifacts
-          path: $GITHUB_WORKSPACE/build
+          path: build
       - name: Run tests
         run: |
           echo "Hello test job"
