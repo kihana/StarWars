@@ -1,7 +1,7 @@
 name: Calculate test coverage
 on:
   workflow_run:
-    workflows: [Test]
+    workflows: [Build]
     types: [completed]
 jobs:
   on-success:
@@ -13,9 +13,25 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe" -OutFile "OpenCppCoverageSetup.exe"
           .\OpenCppCoverageSetup.exe /verysilent | Out-Null
-      - name: Run tests
+      - name: Checkout application source code
+        uses: actions/checkout@v4
+      - name: Download solution artifacts
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          name: solution-artifacts
+          run_id: ${{ github.event.workflow_run.id }}
+          path: build
+      - name: Generate test coverage report
         run: |
-          dir -R | echo
+          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=binary:.\build\core.cov -- .\build\test\core\Debug\core_test.exe
+          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:CoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
+          dir -R CoverageReport | echo
+      - name: Upload test coverage calculation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage-artifacts
+          path: CoverageReport
+          if-no-files-found: error
   on-failure:
     name: Skip test coverage calculation
     runs-on: windows-2022
