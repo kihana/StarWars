@@ -1,4 +1,4 @@
-name: build_and_test
+name: Build & Test
 on:
   push:
     branches:
@@ -13,46 +13,47 @@ jobs:
     steps:
       - name: Set up build environment (install conan)
         run: pip install conan==1.54.0
-      - name: Checkout source code of application
+      - name: Checkout application source code
         uses: actions/checkout@v4
-      - name: Prepare solution dependencies
+      - name: Install solution dependencies
         run: |
           conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_release -pr:h=./conan/windows_x64_release
           conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_debug -pr:h=./conan/windows_x64_debug
-      - name: Configure and generate solution
+      - name: Generate & Configure solution
         run: |
           cd build
           cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE="./conan_toolchain.cmake" -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
-      - name: Build application
+      - name: Build solution
         run: |
           cd build
           cmake --build . --config Release
           cmake --build . --config Debug
+      - name: Upload solution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: solution-artifacts
+          path: |
+            build/test/core/Release/*.exe
+            build/test/core/Debug/*.exe
+            build/test/utils/Release/*.exe
+            build/test/utils/Debug/*.exe
+            build/**/CTestTestfile.cmake
+          if-no-files-found: error
+  test-job:
+    name: Test application
+    runs-on: windows-2022
+    needs: build-job
+    steps:
+      - name: Download solution artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: solution-artifacts
+      - name: Run tests
+        run: |
+          echo "Hello test job"
+          dir -R | echo
       - name: Test application
         run: |
           cd build
           ctest -C Release -V
           ctest -C Debug -V
-      #- name: Archive production artifacts
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: application-artifacts
-      #    path: |
-      #      build/test/core/Release/*.exe
-      #      build/test/core/Debug/*.exe
-      #      build/test/utils/Release/*.exe
-      #      build/test/utils/Debug/*.exe
-      #    if-no-files-found: error
-  #test-job:
-  #  name: Test application
-  #  runs-on: windows-2022
-  #  needs: build-job
-  #  steps:
-  #    - name: Download application artifacts
-  #      uses: actions/download-artifact@v4
-  #      with:
-  #        name: application-artifacts
-  #    - name: Run tests
-  #      run: |
-  #        echo "Hello test job"
-  #        dir -R | echo
