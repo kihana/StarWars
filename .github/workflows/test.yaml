@@ -10,9 +10,10 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Download solution artifacts
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v3
         with:
           name: solution-artifacts
+          run_id: ${{ github.event.workflow_run.id }}
           path: build
       - name: Run tests
         run: |
