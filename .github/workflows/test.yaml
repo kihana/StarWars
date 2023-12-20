@@ -20,7 +20,7 @@ jobs:
         with:
           name: solution-artifacts
           run_id: ${{ github.event.workflow_run.id }}
-          # path: build
+          path: build
       - name: Run tests
         run: |
           cd build
