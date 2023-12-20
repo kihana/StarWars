@@ -48,4 +48,6 @@ jobs:
         with:
           name: application-artifacts
       - name: Run tests
-        run: echo "Hello test job" 
+        run: |
+          echo "Hello test job"
+          dir | echo
