@@ -1,3 +1,4 @@
 # Star Wars
 
-[![Build and test workflow](https://github.com/kihana/star-wars/actions/workflows/main.yaml/badge.svg)](https://github.com/kihana/star-wars/actions/workflows/main.yaml)
+[![Build](https://github.com/kihana/star-wars/actions/workflows/build.yaml/badge.svg)](https://github.com/kihana/star-wars/actions/workflows/build.yaml)
+[![Test](https://github.com/kihana/star-wars/actions/workflows/test.yaml/badge.svg)](https://github.com/kihana/star-wars/actions/workflows/test.yaml)
