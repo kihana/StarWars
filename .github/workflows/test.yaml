@@ -17,10 +17,6 @@ jobs:
           path: build
       - name: Run tests
         run: |
-          echo "Hello test job"
-          dir -R | echo
-      - name: Test application
-        run: |
           cd build
           ctest -C Release -V
           ctest -C Debug -V
