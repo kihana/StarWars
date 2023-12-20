@@ -13,6 +13,8 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.9.0/OpenCppCoverageSetup-x64-0.9.9.0.exe" -OutFile "OpenCppCoverageSetup.exe"
           .\OpenCppCoverageSetup.exe /verysilent | Out-Null
+      - name: Checkout application source code
+        uses: actions/checkout@v4
       - name: Download solution artifacts
         uses: dawidd6/action-download-artifact@v3
         with:
