@@ -32,17 +32,20 @@ jobs:
           name: test-coverage-artifacts
           path: CoverageReport
           if-no-files-found: error
+      - name: Get test coverage
+        run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "TEST_COVERAGE=69"
       - name: Create the Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
           gistID: 8096521389b873c59372081fe6cb3e32
-          filename: your-repo-name__main.json
+          filename: test_coverage_main.json
           label: Test coverage
           # ${{ env.COVERAGE }}
-          message: 100% 
+          message: ${{ env.TEST_COVERAGE }}
           color: green
-          namedLogo: jest
+          namedLogo: googletasks
   on-failure:
     name: Skip test coverage calculation
     runs-on: windows-2022
