@@ -43,7 +43,7 @@ jobs:
           filename: test_coverage_main.json
           label: Test coverage
           # ${{ env.COVERAGE }}
-          message: ${{ env.TEST_COVERAGE }}
+          message: ${{ env.TEST_COVERAGE }} %
           color: green
           namedLogo: googletasks
   on-failure:
