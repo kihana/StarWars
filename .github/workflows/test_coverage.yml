@@ -32,6 +32,17 @@ jobs:
           name: test-coverage-artifacts
           path: CoverageReport
           if-no-files-found: error
+      - name: Create the Badge
+        uses: schneegans/dynamic-badges-action@v1.0.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: 8096521389b873c59372081fe6cb3e32
+          filename: your-repo-name__main.json
+          label: Test coverage
+          # ${{ env.COVERAGE }}
+          message: 100% 
+          color: green
+          namedLogo: jest
   on-failure:
     name: Skip test coverage calculation
     runs-on: windows-2022
