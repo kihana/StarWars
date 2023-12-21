@@ -48,8 +48,8 @@ jobs:
       - name: Create badge
         uses: emibcn/badge-action@d6f51ff11b5c3382b3b88689ae2d6db22d9737d1
         with:
-          label: Tests
-          status: '${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.runs }} runs: ${{ fromJSON( steps.test-report.outputs.json ).conclusion }}'
+          label: Unit tests
+          status: '${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.runs }} runs, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests_skip }} skipped, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests_fail }} failures, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.duration }} duration: ${{ fromJSON( steps.test-report.outputs.json ).conclusion }}'
           color: ${{ env.BADGE_COLOR }}
           path: badge.svg
       - name: Upload badge to Gist
