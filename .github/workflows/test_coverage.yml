@@ -33,8 +33,16 @@ jobs:
           path: CoverageReport
           if-no-files-found: error
       - name: Get test coverage
+        shell: bash
         run: |
-          Add-Content -Path $env:GITHUB_ENV -Value "TEST_COVERAGE=69"
+          cd build/CoverageReport
+          CONTENT=`cat index.html`
+          RE="<td>([[:digit:]]*)</td>"
+
+          if [[ $CONTENT =~ $RE ]]; then
+            echo ${BASH_REMATCH[1]}
+            echo "TEST_COVERAGE=${BASH_REMATCH[1]}" >> $GITHUB_ENV
+          fi
       - name: Create the Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
