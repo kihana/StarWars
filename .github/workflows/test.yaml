@@ -12,18 +12,18 @@ jobs:
       pull-requests: write
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Download solution artifacts
+      - name: Download Build artifacts
         uses: dawidd6/action-download-artifact@v3
         with:
-          name: solution-artifacts
+          name: build-artifacts
           run_id: ${{ github.event.workflow_run.id }}
           path: build
-      - name: Run tests
+      - name: Run Unit Tests
         run: |
           cd build
           ctest -C Release -V --output-junit test_reports/report.xml
           dir -R test_reports | echo
-      - name: Publish test report
+      - name: Publish Unit Tests report
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         id: test-report
         if: always()
@@ -48,12 +48,12 @@ jobs:
       - name: Create badge
         uses: emibcn/badge-action@d6f51ff11b5c3382b3b88689ae2d6db22d9737d1
         with:
-          label: Unit tests
+          label: Unit Tests
           status: '${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests }} tests, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.runs }} runs, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests_skip }} skipped, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.tests_fail }} failures, ${{ fromJSON( steps.test-report.outputs.json ).formatted.stats.duration }} duration: ${{ fromJSON( steps.test-report.outputs.json ).conclusion }}'
           color: ${{ env.BADGE_COLOR }}
           path: badge.svg
       - name: Upload badge to Gist
-        # Upload only for master branch
+        # Upload only f.or master branch
         if: >
           github.event_name == 'workflow_run' && github.event.workflow_run.head_branch == 'main' ||
           github.event_name != 'workflow_run' && github.ref == 'refs/heads/main' ||
