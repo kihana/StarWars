@@ -15,24 +15,24 @@ jobs:
           .\OpenCppCoverageSetup.exe /verysilent | Out-Null
       - name: Checkout application source code
         uses: actions/checkout@v4
-      - name: Download solution artifacts
+      - name: Download Build artifacts
         uses: dawidd6/action-download-artifact@v3
         with:
-          name: solution-artifacts
+          name: build-artifacts
           run_id: ${{ github.event.workflow_run.id }}
           path: build
-      - name: Generate test coverage report
+      - name: Generate Test Coverage report
         run: |
           & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=binary:.\build\core.cov -- .\build\test\core\Debug\core_test.exe
           & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:CoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
           dir -R CoverageReport | echo
-      - name: Upload test coverage calculation report
+      - name: Upload Test Coverage Calculation report
         uses: actions/upload-artifact@v4
         with:
           name: test-coverage-artifacts
           path: CoverageReport
           if-no-files-found: error
-      - name: Get test coverage
+      - name: Get Test Coverage Result
         shell: bash
         run: |
           cd CoverageReport
@@ -43,7 +43,7 @@ jobs:
             echo ${BASH_REMATCH[1]}
             echo "TEST_COVERAGE=${BASH_REMATCH[1]}" >> $GITHUB_ENV
           fi
-      - name: Create the Badge
+      - name: Create Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
