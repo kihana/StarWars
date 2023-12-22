@@ -35,7 +35,7 @@ jobs:
       - name: Get test coverage
         shell: bash
         run: |
-          cd build/CoverageReport
+          cd CoverageReport
           CONTENT=`cat index.html`
           RE="<td>([[:digit:]]*)</td>"
 
