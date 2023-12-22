@@ -5,7 +5,7 @@ on:
     types: [completed]
 jobs:
   on-success:
-    name: Test coverage calculation
+    name: Test Coverage Calculation
     runs-on: windows-2022
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
@@ -15,27 +15,26 @@ jobs:
           .\OpenCppCoverageSetup.exe /verysilent | Out-Null
       - name: Checkout application source code
         uses: actions/checkout@v4
-      - name: Download Build artifacts
+      - name: Download build artifacts
         uses: dawidd6/action-download-artifact@v3
         with:
           name: build-artifacts
           run_id: ${{ github.event.workflow_run.id }}
           path: build
-      - name: Generate Test Coverage report
+      - name: Generate test coverage report
         run: |
           & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=binary:.\build\core.cov -- .\build\test\core\Debug\core_test.exe
-          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:CoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
-          dir -R CoverageReport | echo
-      - name: Upload Test Coverage Calculation report
+          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:TestCoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
+      - name: Upload test coverage calculation report
         uses: actions/upload-artifact@v4
         with:
-          name: test-coverage-artifacts
-          path: CoverageReport
+          name: test-coverage-report
+          path: TestCoverageReport
           if-no-files-found: error
-      - name: Get Test Coverage Result
+      - name: Get test coverage result
         shell: bash
         run: |
-          cd CoverageReport
+          cd TestCoverageReport
           CONTENT=`cat index.html`
           RE="Cover[[:space:]]([[:digit:]]*)%</canvas>"
 
@@ -43,14 +42,15 @@ jobs:
             echo ${BASH_REMATCH[1]}
             echo "TEST_COVERAGE=${BASH_REMATCH[1]}" >> $GITHUB_ENV
           fi
-      - name: Create Badge
+      - name: Report test coverage result to workflow summary
+        run: echo '### Test coverage result:&nbsp;${{ env.TEST_COVERAGE }} %' >> $GITHUB_STEP_SUMMARY
+      - name: Create badge with test coverage result
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
           gistID: 8096521389b873c59372081fe6cb3e32
           filename: test_coverage_main.json
-          label: Test coverage
-          # ${{ env.COVERAGE }}
+          label: Test Coverage
           message: ${{ env.TEST_COVERAGE }} %
           color: green
           namedLogo: googletasks
