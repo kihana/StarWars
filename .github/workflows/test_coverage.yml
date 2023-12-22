@@ -37,7 +37,7 @@ jobs:
         run: |
           cd CoverageReport
           CONTENT=`cat index.html`
-          RE="<td>([[:digit:]]*)</td>"
+          RE="Cover[[:space:]]([[:digit:]]*)%</canvas>"
 
           if [[ $CONTENT =~ $RE ]]; then
             echo ${BASH_REMATCH[1]}
