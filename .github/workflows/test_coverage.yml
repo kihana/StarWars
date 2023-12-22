@@ -5,7 +5,7 @@ on:
     types: [completed]
 jobs:
   on-success:
-    name: Test Coverage Calculation
+    name: Test coverage calculation
     runs-on: windows-2022
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
@@ -43,7 +43,7 @@ jobs:
             echo "TEST_COVERAGE=${BASH_REMATCH[1]}" >> $GITHUB_ENV
           fi
       - name: Report test coverage result to workflow summary
-        run: echo '### Test coverage result:&nbsp;${{ env.TEST_COVERAGE }} %' >> $env:GITHUB_STEP_SUMMARY
+        run: echo '### Test coverage result:&nbsp;${{ env.TEST_COVERAGE }}%' >> $env:GITHUB_STEP_SUMMARY
       - name: Create badge with test coverage result
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
@@ -51,7 +51,7 @@ jobs:
           gistID: 8096521389b873c59372081fe6cb3e32
           filename: test_coverage_main.json
           label: Test Coverage
-          message: ${{ env.TEST_COVERAGE }} %
+          message: ${{ env.TEST_COVERAGE }}%
           color: green
           namedLogo: googletasks
   on-failure:
