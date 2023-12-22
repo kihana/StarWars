@@ -43,7 +43,7 @@ jobs:
             echo "TEST_COVERAGE=${BASH_REMATCH[1]}" >> $GITHUB_ENV
           fi
       - name: Report test coverage result to workflow summary
-        run: echo '### Test coverage result:&nbsp;${{ env.TEST_COVERAGE }}%' >> $env:GITHUB_STEP_SUMMARY
+        run: echo '### Test coverage:&nbsp;${{ env.TEST_COVERAGE }}%' >> $env:GITHUB_STEP_SUMMARY
       - name: Create badge with test coverage result
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
