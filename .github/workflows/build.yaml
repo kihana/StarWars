@@ -1,0 +1,36 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+      - release/*
+      - bugfix/*
+jobs:
+  build-job:
+    name: Build application
+    runs-on: windows-2022
+    steps:
+      - name: Set up build environment (install conan)
+        run: pip install conan==1.54.0
+      - name: Checkout application source code
+        uses: actions/checkout@v4
+      - name: Install solution dependencies
+        run: |
+          conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_release -pr:h=./conan/windows_x64_release
+          conan install ./conan -if=build -of=build --build=missing -pr:b=./conan/windows_x64_debug -pr:h=./conan/windows_x64_debug
+      - name: Generate & Configure solution
+        run: |
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -DCMAKE_TOOLCHAIN_FILE="./conan_toolchain.cmake" -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
+      - name: Build solution
+        run: |
+          cd build
+          cmake --build . --config Release
+          cmake --build . --config Debug
+      - name: Upload Build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build
+          if-no-files-found: error
