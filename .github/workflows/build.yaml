@@ -6,9 +6,10 @@ on:
       - feature/*
       - release/*
       - bugfix/*
+      - improvement/*
 jobs:
   build-job:
-    name: Build application
+    name: Build project
     runs-on: windows-2022
     steps:
       - name: Set up build environment (install conan)
