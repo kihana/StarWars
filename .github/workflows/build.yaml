@@ -1,18 +1,11 @@
 name: Build
-on:
-  push:
-    branches:
-      - main
-      - feature/*
-      - release/*
-      - bugfix/*
-      - improvement/*
+on: push
 jobs:
-  build-job:
-    name: Build project
+  build:
+    name: Build
     runs-on: windows-2022
     steps:
-      - name: Set up build environment (install conan)
+      - name: Set up build environment
         run: pip install conan==1.54.0
       - name: Checkout application source code
         uses: actions/checkout@v4
