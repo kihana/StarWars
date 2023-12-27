@@ -4,7 +4,7 @@
 
 using namespace server::core;
 
-TEST(Core, VectorEqualsTest) {
+TEST(Vector, EqualsTest) {
   Vector v1(-3, 4);
   Vector v2(-3, 4);
   Vector v3(-9, 4);
@@ -17,7 +17,7 @@ TEST(Core, VectorEqualsTest) {
   EXPECT_FALSE(v3 == v2);
 }
 
-TEST(Core, VectorPlusTest) {
+TEST(Vector, PlusTest) {
   Vector v1(-3, 4);
   Vector v2(-3, 4);
   Vector v3(-9, 4);
