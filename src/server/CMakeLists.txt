@@ -18,4 +18,4 @@ endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER ${PROJECT_NAME})
 
 add_subdirectory(core)
-add_subdirectory(utils)
+add_subdirectory(commands)
