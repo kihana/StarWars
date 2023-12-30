@@ -3,7 +3,7 @@
 #include <cmath>
 #include <numbers>
 
-namespace server::utils {
+namespace server::commands {
 
 Rotate::Rotate(Rotatable& rotatable) : rotatable_(rotatable) {
 }
@@ -15,4 +15,4 @@ void Rotate::Execute() {
                                       std::llround(pos.x * std::sin(angle) + pos.y * std::cos(angle))});
 }
 
-} // namespace server::utils
+} // namespace server::commands

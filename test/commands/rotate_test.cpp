@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "utils/rotate.h"
+#include "commands/rotate.h"
 
-using namespace server::utils;
+using namespace server::commands;
 using namespace server::core;
 
 class TestRotatable : public Rotatable {
