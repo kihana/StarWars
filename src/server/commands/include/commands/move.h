@@ -9,6 +9,8 @@
 namespace server::commands {
 
 static std::string_view kPositionName = "Position";
+static std::string_view kMovableName = "Movable";
+static std::string_view kMoveCommandName = "Move";
 
 struct Movable {
   virtual ~Movable() = default;

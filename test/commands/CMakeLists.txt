@@ -4,7 +4,7 @@ project(commands_test LANGUAGES CXX)
 
 find_package(GTest REQUIRED)
 
-add_executable (${PROJECT_NAME} "move_test.cpp" "rotate_test.cpp")
+add_executable (${PROJECT_NAME} "end_move_test.cpp" "move_test.cpp" "rotate_test.cpp")
 
 if(CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
