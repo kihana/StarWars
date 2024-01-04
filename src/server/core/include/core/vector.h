@@ -5,6 +5,15 @@
 namespace server::core {
 
 struct Vector {
+  Vector& operator+=(const Vector& rhs) noexcept;
+  friend const Vector operator+(Vector lhs, const Vector& rhs) noexcept {
+    lhs += rhs;
+
+    return lhs;
+  }
+
+  bool operator==(const server::core::Vector& that) const noexcept;
+
   Vector() = default;
   Vector(std::int64_t x, std::int64_t y) : x(x), y(y){};
 
@@ -13,6 +22,3 @@ struct Vector {
 };
 
 } // namespace server::core
-
-server::core::Vector operator+(server::core::Vector v1, server::core::Vector v2);
-bool operator==(server::core::Vector v1, server::core::Vector v2);

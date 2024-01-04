@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "utils/rotate.h"
+#include "commands/rotate.h"
 
-using namespace server::utils;
+using namespace server::commands;
 using namespace server::core;
 
 class TestRotatable : public Rotatable {
@@ -31,9 +31,9 @@ TEST(Utils, RotateTest) {
   rotatable.SetAngle(90);
   Rotate rotate(rotatable);
   rotate.Execute();
-  EXPECT_TRUE(rotatable.GetPosition() == Vector(-2, 3));
+  EXPECT_EQ(rotatable.GetPosition(), Vector(-2, 3));
 
   rotatable.SetPosition({12, 5});
   rotate.Execute();
-  EXPECT_TRUE(rotatable.GetPosition() == Vector(-5, 12));
+  EXPECT_EQ(rotatable.GetPosition(), Vector(-5, 12));
 }

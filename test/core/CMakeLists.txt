@@ -4,7 +4,7 @@ project(core_test LANGUAGES CXX)
 
 find_package(GTest REQUIRED)
 
-add_executable (${PROJECT_NAME} "vector_test.cpp")
+add_executable (${PROJECT_NAME} "object_test.cpp" "vector_test.cpp")
 
 if(CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

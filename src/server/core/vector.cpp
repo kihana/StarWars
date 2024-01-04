@@ -1,11 +1,16 @@
 ﻿#include "vector.h"
 
-namespace server::core {} // namespace server::core
+namespace server::core {
 
-server::core::Vector operator+(const server::core::Vector v1, const server::core::Vector v2) {
-  return server::core::Vector{v1.x + v2.x, v1.y + v2.y};
+Vector& Vector::operator+=(const Vector& rhs) noexcept {
+  this->x += rhs.x;
+  this->y += rhs.y;
+
+  return *this;
 }
 
-bool operator==(const server::core::Vector v1, const server::core::Vector v2) {
-  return v1.x == v2.x && v1.y == v2.y;
+bool Vector::operator==(const server::core::Vector& that) const noexcept {
+  return this->x == that.x && this->y == that.y;
 }
+
+} // namespace server::core

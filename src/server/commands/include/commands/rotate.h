@@ -3,7 +3,7 @@
 #include "core/angle.h"
 #include "core/vector.h"
 
-namespace server::utils {
+namespace server::commands {
 
 struct Rotatable {
   virtual ~Rotatable() = default;
@@ -24,4 +24,4 @@ private:
   Rotatable& rotatable_;
 };
 
-} // namespace server::utils
+} // namespace server::commands
