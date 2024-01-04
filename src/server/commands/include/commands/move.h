@@ -10,7 +10,7 @@ namespace server::commands {
 
 static std::string_view kPositionName = "Position";
 static std::string_view kMovableName = "Movable";
-static std::string_view kMoveCommandName = "Move";
+static std::string_view kMoveCommandName = "Move command";
 
 struct Movable {
   virtual ~Movable() = default;
@@ -20,7 +20,7 @@ struct Movable {
   virtual core::Vector GetVelocity() const = 0;
 };
 
-class MovableAdapter : public Movable {
+class MovableAdapter : public Movable, public Adapter {
 public:
   explicit MovableAdapter(const std::shared_ptr<core::Object>& movable);
 
@@ -29,12 +29,14 @@ public:
   core::Vector GetVelocity() const override;
 
 private:
-  std::weak_ptr<core::Object> movable_;
+  std::string_view GetAdapterName() const override;
+  std::string_view GetParentAdapterName() const override;
 };
 
 class Move : public Command {
 public:
   explicit Move(const std::shared_ptr<core::Object>& movable);
+  explicit Move(std::unique_ptr<Movable> movable);
 
   void Execute();
 

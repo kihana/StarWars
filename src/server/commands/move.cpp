@@ -1,58 +1,49 @@
 ﻿#include "move.h"
 
+#include <format>
 #include <stdexcept>
 
 #include "commands/set_velocity.h"
 
 namespace server::commands {
 
-MovableAdapter::MovableAdapter(const std::shared_ptr<core::Object>& movable) : movable_(movable) {
+MovableAdapter::MovableAdapter(const std::shared_ptr<core::Object>& movable) : Adapter(movable) {
+}
+
+std::string_view MovableAdapter::GetAdapterName() const {
+  return kMovableName;
+}
+
+std::string_view MovableAdapter::GetParentAdapterName() const {
+  return kMoveCommandName;
 }
 
 core::Vector MovableAdapter::GetPosition() const {
-  auto movable = movable_.lock();
-  if (!movable)
-    throw std::runtime_error("Moving object to get position is unavailable.");
+  const auto& any_position = GetAnyValue(kPositionName);
 
-  auto& any_position = movable->GetValue(kPositionName);
-  if (!any_position.has_value())
-    throw std::runtime_error("Position property is not specified for moving object.");
-
-  try {
-    return std::any_cast<core::Vector>(any_position);
-  } catch (const std::bad_any_cast&) {
-    throw std::runtime_error("Unexpected type of position property in moving object.");
-  }
+  return CastAnyRefToValue<core::Vector>(kPositionName, any_position);
 }
 
 void MovableAdapter::SetPosition(const core::Vector value) {
-  auto movable = movable_.lock();
-  if (!movable)
-    throw std::runtime_error("Moving object to set position is unavailable.");
-
-  movable->SetValue(kPositionName, std::make_any<core::Vector>(value));
+  SetValue(kPositionName, value);
 }
 
 core::Vector MovableAdapter::GetVelocity() const {
-  auto movable = movable_.lock();
-  if (!movable)
-    throw std::runtime_error("Moving object to get velocity is unavailable.");
+  const auto& any_velocity = GetAnyValue(kVelocityName);
 
-  auto& any_velocity = movable->GetValue(kVelocityName);
-  if (!any_velocity.has_value())
-    throw std::runtime_error("Velocity property is not specified for moving object.");
-
-  try {
-    return std::any_cast<core::Vector>(any_velocity);
-  } catch (const std::bad_any_cast&) {
-    throw std::runtime_error("Unexpected type of velocity property in moving object.");
-  }
+  return CastAnyRefToValue<core::Vector>(kVelocityName, any_velocity);
 }
 
 Move::Move(const std::shared_ptr<core::Object>& movable) : movable_(std::make_unique<MovableAdapter>(movable)) {
 }
 
+Move::Move(std::unique_ptr<Movable> movable) : movable_(std::move(movable)) {
+}
+
 void Move::Execute() {
+  if (!movable_)
+    throw std::runtime_error(std::format("'{}' is unavailable.", kMovableName));
+
   movable_->SetPosition(movable_->GetPosition() + movable_->GetVelocity());
 }
 
