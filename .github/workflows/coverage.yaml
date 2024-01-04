@@ -1,4 +1,4 @@
-name: Calculate test coverage
+name: Coverage
 on:
   workflow_run:
     workflows: [Build]
@@ -22,19 +22,17 @@ jobs:
           run_id: ${{ github.event.workflow_run.id }}
           path: build
       - name: Generate test coverage report
-        run: |
-          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=binary:.\build\core.cov -- .\build\test\core\Debug\core_test.exe
-          & 'C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe' --sources $env:GITHUB_WORKSPACE\src --export_type=html:TestCoverageReport --input_coverage=.\build\core.cov -- .\build\test\utils\Debug\utils_test.exe
+        run: cmake -P cmake/scripts/coverage.cmake
       - name: Upload test coverage calculation report
         uses: actions/upload-artifact@v4
         with:
           name: test-coverage-report
-          path: TestCoverageReport
+          path: build/TestCoverageReport
           if-no-files-found: error
       - name: Get test coverage result
         shell: bash
         run: |
-          cd TestCoverageReport
+          cd build/TestCoverageReport
           CONTENT=`cat index.html`
           RE="Cover[[:space:]]([[:digit:]]*)%</canvas>"
 

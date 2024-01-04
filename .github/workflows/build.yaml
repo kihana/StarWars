@@ -10,7 +10,7 @@ jobs:
       - name: Checkout application source code
         uses: actions/checkout@v4
       - name: Build application
-        run: cmake -P cmake/scripts/build.txt
+        run: cmake -P cmake/scripts/build.cmake
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
