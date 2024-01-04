@@ -9,9 +9,8 @@ TEST(SetVelocityTest, Common) {
   SetVelocity set_velocity_command(velocity_setable, {12, 5});
   set_velocity_command.Execute();
   auto& any_velocity = velocity_setable->GetValue(kVelocityName);
-  const auto velocity = std::any_cast<core::Vector>(any_velocity);
-  const core::Vector ref_velocity(12, 5);
-  EXPECT_TRUE(velocity == ref_velocity);
+  auto velocity = std::any_cast<core::Vector>(any_velocity);
+  EXPECT_EQ(velocity, core::Vector(12, 5));
 }
 
 TEST(SetVelocityTest, EmptyVelocitySetable) {
