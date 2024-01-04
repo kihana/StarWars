@@ -7,9 +7,7 @@
 #include <stdexcept>
 #include <string_view>
 
-namespace server::core {
-class Object;
-}
+#include "core/object.h"
 
 namespace server::commands {
 
@@ -29,6 +27,14 @@ public:
 protected:
   std::any& GetAnyValue(std::string_view property_name);
   const std::any& GetAnyValue(std::string_view property_name) const;
+
+  template <typename T> void SetValue(std::string_view property_name, T value) {
+    if (!property_holder_)
+      throw std::runtime_error(std::format("'{}' to set '{}' is unavailable in '{}'.", GetAdapterName(), property_name,
+                                           GetParentAdapterName()));
+
+    property_holder_->SetValue(property_name, value);
+  }
 
   template <typename T> T& CastAnyPointerToRef(std::string_view property_name, std::any& any_value) {
     try {
