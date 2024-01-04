@@ -8,15 +8,9 @@
 
 namespace server::commands {
 
-std::shared_ptr<core::Object> MakeStartMoveOrder(std::weak_ptr<core::Object> movable, const core::Vector velocity,
-                                                 Queue<std::unique_ptr<Command>>& command_queue) {
-  auto order = std::make_shared<core::Object>();
-  order->SetValue(kMovableName, std::move(movable));
-  order->SetValue(kVelocityName, velocity);
-  order->SetValue(kCommandQueueName, &command_queue);
-
-  return order;
-}
+extern std::shared_ptr<core::Object> MakeStartMoveOrder(std::weak_ptr<core::Object> movable,
+                                                        const core::Vector velocity,
+                                                        Queue<std::unique_ptr<Command>>& command_queue);
 
 std::shared_ptr<core::Object> MakeEndMoveOrder(std::weak_ptr<core::Object> movable,
                                                std::unique_ptr<Command>& move_command,
