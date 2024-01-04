@@ -27,7 +27,7 @@ TEST_F(ObjectTest, GetValueForCorrectValueType) {
   ASSERT_TRUE(any_value.has_value());
 
   const auto& vector_value = std::any_cast<const Vector&>(any_value);
-  EXPECT_TRUE(Vector(-3, 4) == vector_value);
+  EXPECT_EQ(Vector(-3, 4), vector_value);
 }
 
 TEST_F(ObjectTest, GetValueForNonExistentKey) {
@@ -52,7 +52,7 @@ TEST_F(ObjectTest, SetValueForExistentKeyWithTheSameType) {
   ASSERT_TRUE(any_value.has_value());
 
   const auto& vector_value = std::any_cast<const Vector&>(any_value);
-  EXPECT_TRUE(Vector(122, 133) == vector_value);
+  EXPECT_EQ(Vector(122, 133), vector_value);
 }
 
 TEST_F(ObjectTest, SetValueForExistentKeyWithNewType) {
@@ -61,7 +61,7 @@ TEST_F(ObjectTest, SetValueForExistentKeyWithNewType) {
   ASSERT_TRUE(any_value.has_value());
 
   const auto int_value = std::any_cast<int>(any_value);
-  EXPECT_TRUE(5 == int_value);
+  EXPECT_EQ(5, int_value);
 }
 
 TEST_F(ObjectTest, SetValueForNonExistentKey) {
@@ -71,6 +71,26 @@ TEST_F(ObjectTest, SetValueForNonExistentKey) {
 
   const auto int_value = std::any_cast<int>(any_value);
   EXPECT_TRUE(5 == int_value);
+}
+
+TEST_F(ObjectTest, RemoveExistentKey) {
+  const auto& any_value = object_.GetValue(kExistentKey);
+  ASSERT_TRUE(any_value.has_value());
+
+  const auto& vector_value = std::any_cast<const Vector&>(any_value);
+  ASSERT_EQ(Vector(-3, 4), vector_value);
+
+  object_.RemoveKey(kExistentKey);
+
+  EXPECT_THROW(object_.GetValue(kExistentKey), std::out_of_range);
+}
+
+TEST_F(ObjectTest, RemoveNonExistentKey) {
+  EXPECT_THROW(object_.GetValue(kNonExistentKey), std::out_of_range);
+
+  object_.RemoveKey(kNonExistentKey);
+
+  EXPECT_THROW(object_.GetValue(kNonExistentKey), std::out_of_range);
 }
 
 } // namespace server::core
