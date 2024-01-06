@@ -4,6 +4,7 @@ project(commands LANGUAGES CXX)
 
 add_library(${PROJECT_NAME} STATIC
   include/command.h
+  include/${PROJECT_NAME}/end_command.h
   include/${PROJECT_NAME}/start_command.h
   include/${PROJECT_NAME}/end_move.h
   include/${PROJECT_NAME}/move.h
@@ -11,6 +12,7 @@ add_library(${PROJECT_NAME} STATIC
   include/${PROJECT_NAME}/set_velocity.h
   include/${PROJECT_NAME}/start_move.h
   command.cpp
+  end_command.cpp
   end_move.cpp
   move.cpp
   start_command.cpp
