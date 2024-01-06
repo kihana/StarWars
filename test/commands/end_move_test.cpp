@@ -8,9 +8,9 @@
 
 namespace server::commands {
 
-extern std::shared_ptr<core::Object> MakeStartMoveOrder(std::weak_ptr<core::Object> movable,
-                                                        const core::Vector velocity,
-                                                        Queue<std::unique_ptr<Command>>& command_queue);
+std::unique_ptr<StartCommandAdapter> MakeStartMoveAdapter(std::weak_ptr<core::Object> movable,
+                                                          const core::Vector velocity,
+                                                          Queue<std::unique_ptr<Command>>& command_queue);
 
 std::shared_ptr<core::Object> MakeEndMoveOrder(std::weak_ptr<core::Object> movable,
                                                std::unique_ptr<Command>& move_command,
@@ -29,9 +29,9 @@ protected:
     movable_ = std::make_shared<core::Object>();
     MovableAdapter movable_adapter(movable_);
     movable_adapter.SetPosition({13, 12});
-    auto start_move_order = MakeStartMoveOrder(movable_, {12, 5}, command_queue_);
-    StartMove start_move(start_move_order);
-    start_move.Execute();
+    auto start_move_adapter = MakeStartMoveAdapter(movable_, {12, 5}, command_queue_);
+    StartCommand start_move_command(std::move(start_move_adapter));
+    start_move_command.Execute();
   }
 
   std::shared_ptr<core::Object> movable_;

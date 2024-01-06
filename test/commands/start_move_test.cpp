@@ -8,14 +8,21 @@
 
 namespace server::commands {
 
-std::shared_ptr<core::Object> MakeStartMoveOrder(std::weak_ptr<core::Object> movable, const core::Vector velocity,
-                                                 Queue<std::unique_ptr<Command>>& command_queue) {
-  auto order = std::make_shared<core::Object>();
-  order->SetValue(kMovableName, std::move(movable));
-  order->SetValue(kVelocityName, velocity);
-  order->SetValue(kCommandQueueName, &command_queue);
+std::shared_ptr<core::Object> MakeStartMovePropertyHolder(std::weak_ptr<core::Object> movable,
+                                                          const core::Vector velocity,
+                                                          Queue<std::unique_ptr<Command>>& command_queue) {
+  auto property_holder = std::make_shared<core::Object>();
+  property_holder->SetValue(kMovableName, std::move(movable));
+  property_holder->SetValue(kVelocityName, velocity);
+  property_holder->SetValue(kCommandQueueName, &command_queue);
 
-  return order;
+  return property_holder;
+}
+
+std::unique_ptr<StartCommandAdapter> MakeStartMoveAdapter(std::weak_ptr<core::Object> movable,
+                                                          const core::Vector velocity,
+                                                          Queue<std::unique_ptr<Command>>& command_queue) {
+  return std::make_unique<StartMoveAdapter>(MakeStartMovePropertyHolder(movable, velocity, command_queue));
 }
 
 class StartMoveTest : public testing::Test {
@@ -24,17 +31,16 @@ protected:
     movable_ = std::make_shared<core::Object>();
     MovableAdapter movable_adapter(movable_);
     movable_adapter.SetPosition({13, 12});
-    start_move_order_ = MakeStartMoveOrder(movable_, {12, 5}, command_queue_);
   }
 
   std::shared_ptr<core::Object> movable_;
-  std::shared_ptr<core::Object> start_move_order_;
   Queue<std::unique_ptr<Command>> command_queue_;
 };
 
 TEST_F(StartMoveTest, Common) {
-  StartMove start_move(start_move_order_);
-  start_move.Execute();
+  auto start_move_adapter = MakeStartMoveAdapter(movable_, {12, 5}, command_queue_);
+  StartCommand start_move_command(std::move(start_move_adapter));
+  start_move_command.Execute();
 
   auto& set_velocity_command = command_queue_.front();
   auto& move_command = command_queue_.back();
@@ -45,15 +51,15 @@ TEST_F(StartMoveTest, Common) {
   ASSERT_NE(nullptr, dynamic_cast<Move*>(move_command.get()));
 }
 
-TEST_F(StartMoveTest, EmptyOrder) {
-  std::unique_ptr<MoveStartable> empty_order;
-  StartMove start_move(std::move(empty_order));
+TEST_F(StartMoveTest, EmptyAdapter) {
+  std::unique_ptr<StartCommandAdapter> empty_adapter;
+  StartCommand start_move(std::move(empty_adapter));
   EXPECT_THROW(
       {
         try {
           start_move.Execute();
         } catch (const std::runtime_error& e) {
-          EXPECT_TRUE(e.what() == std::format("'{}' is unavailable.", kStartMoveAdapterName));
+          EXPECT_EQ(e.what(), std::format("'{}' has not been initialized.", kStartCommandName));
           throw;
         }
       },
@@ -62,8 +68,8 @@ TEST_F(StartMoveTest, EmptyOrder) {
 
 TEST_F(StartMoveTest, EmptyPropertyHolder) {
   std::shared_ptr<core::Object> empty_property_holder;
-  std::unique_ptr<MoveStartable> order = std::make_unique<MoveStartableAdapter>(empty_property_holder);
-  StartMove start_move(std::move(order));
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(empty_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -77,9 +83,11 @@ TEST_F(StartMoveTest, EmptyPropertyHolder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, NoMovableInOrder) {
-  start_move_order_->RemoveKey(kMovableName);
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, NoMovableInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->RemoveKey(kMovableName);
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -93,9 +101,11 @@ TEST_F(StartMoveTest, NoMovableInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, EmptyAnyMovableValueInOrder) {
-  start_move_order_->SetValue(kMovableName, std::any());
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, EmptyAnyMovableValueInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->SetValue(kMovableName, std::any());
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -109,9 +119,11 @@ TEST_F(StartMoveTest, EmptyAnyMovableValueInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, WrongMovableTypeInOrder) {
-  start_move_order_->SetValue(kMovableName, 5);
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, WrongMovableTypeInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->SetValue(kMovableName, 5);
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -125,10 +137,10 @@ TEST_F(StartMoveTest, WrongMovableTypeInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, EmptyMovableValueInOrder) {
+TEST_F(StartMoveTest, EmptyMovableValueInAdapter) {
   std::weak_ptr<core::Object> movable;
-  start_move_order_->SetValue(kMovableName, std::move(movable));
-  StartMove start_move(start_move_order_);
+  std::unique_ptr<StartCommandAdapter> adapter = MakeStartMoveAdapter(std::move(movable), {12, 5}, command_queue_);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -142,9 +154,11 @@ TEST_F(StartMoveTest, EmptyMovableValueInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, NoCommandQueueInOrder) {
-  start_move_order_->RemoveKey(kCommandQueueName);
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, NoCommandQueueInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->RemoveKey(kCommandQueueName);
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -158,9 +172,11 @@ TEST_F(StartMoveTest, NoCommandQueueInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, EmptyAnyCommandQueueValueInOrder) {
-  start_move_order_->SetValue(kCommandQueueName, std::any());
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, EmptyAnyCommandQueueValueInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->SetValue(kCommandQueueName, std::any());
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -174,9 +190,11 @@ TEST_F(StartMoveTest, EmptyAnyCommandQueueValueInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, WrongCommandQueueTypeInOrder) {
-  start_move_order_->SetValue(kCommandQueueName, 5);
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, WrongCommandQueueTypeInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->SetValue(kCommandQueueName, 5);
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -190,9 +208,11 @@ TEST_F(StartMoveTest, WrongCommandQueueTypeInOrder) {
       std::runtime_error);
 }
 
-TEST_F(StartMoveTest, NoVelocityInOrder) {
-  start_move_order_->RemoveKey(kVelocityName);
-  StartMove start_move(start_move_order_);
+TEST_F(StartMoveTest, NoVelocityInAdapter) {
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->RemoveKey(kVelocityName);
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -207,8 +227,10 @@ TEST_F(StartMoveTest, NoVelocityInOrder) {
 }
 
 TEST_F(StartMoveTest, EmptyAnyVelocityValueInOrder) {
-  start_move_order_->SetValue(kVelocityName, std::any());
-  StartMove start_move(start_move_order_);
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->SetValue(kVelocityName, std::any());
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
@@ -223,8 +245,10 @@ TEST_F(StartMoveTest, EmptyAnyVelocityValueInOrder) {
 }
 
 TEST_F(StartMoveTest, WrongVelocityTypeInOrder) {
-  start_move_order_->SetValue(kVelocityName, 5);
-  StartMove start_move(start_move_order_);
+  auto start_move_property_holder = MakeStartMovePropertyHolder(movable_, {12, 5}, command_queue_);
+  start_move_property_holder->SetValue(kVelocityName, 5);
+  std::unique_ptr<StartCommandAdapter> adapter = std::make_unique<StartMoveAdapter>(start_move_property_holder);
+  StartCommand start_move(std::move(adapter));
   EXPECT_THROW(
       {
         try {
