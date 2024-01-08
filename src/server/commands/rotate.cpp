@@ -44,7 +44,7 @@ Rotate::Rotate(std::unique_ptr<Rotatable> rotatable) : rotatable_(std::move(rota
 
 void Rotate::Execute() {
   if (!rotatable_)
-    throw std::runtime_error(std::format("'{}' is unavailable.", kMovableName));
+    throw std::runtime_error(std::format("'{}' is unavailable.", kRotatableName));
 
   const auto pos = rotatable_->GetPosition();
   const auto angle = rotatable_->GetAngle() * std::numbers::pi / 180;

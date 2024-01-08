@@ -4,6 +4,7 @@
 #include "commands/start_rotate.h"
 #include "commands/rotate.h"
 #include "core/object.h"
+#include "utils.h"
 
 namespace server::commands {
 
@@ -23,18 +24,6 @@ std::unique_ptr<StartCommandAdapter> MakeStartRotateAdapter(std::weak_ptr<core::
                                                             Queue<std::unique_ptr<Command>>& command_queue) {
   return std::make_unique<StartRotateAdapter>(MakeStartRotatePropertyHolder(rotatable, angle, command_queue));
 }
-
-#define EXPECT_ERROR(command, TException, message)                                                                     \
-  EXPECT_THROW(                                                                                                        \
-      {                                                                                                                \
-        try {                                                                                                          \
-          command.Execute();                                                                                           \
-        } catch (const TException& e) {                                                                                \
-          EXPECT_EQ(e.what(), message);                                                                                \
-          throw;                                                                                                       \
-        }                                                                                                              \
-      },                                                                                                               \
-      TException);
 
 class StartRotateTest : public testing::Test {
 protected:
