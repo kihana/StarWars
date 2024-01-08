@@ -19,10 +19,10 @@ std::string_view EndRotateAdapter::GetParentAdapterName() const {
   return kEndRotateCommandName;
 }
 
-std::unique_ptr<Command>& EndRotateAdapter::GetRotateCommand() {
+InjectableCommand* EndRotateAdapter::GetRotateCommand() {
   auto& any_rotate_command = GetAnyValue(kRotateCommandName);
 
-  return CastAnyPointerToRef<std::unique_ptr<Command>>(kRotateCommandName, any_rotate_command);
+  return CastAnyPointerToPointer<InjectableCommand>(kRotateCommandName, any_rotate_command);
 }
 
 std::weak_ptr<core::Object>& EndRotateAdapter::GetRotatable() {
@@ -46,7 +46,7 @@ void EndRotateAdapter::DoEndAction() {
   auto& command_queue = GetCommandQueue();
   const auto& command = GetRotateCommand();
   rotatable->RemoveKey(kAngleName);
-  std::erase(command_queue, command);
+  command->Inject(std::make_unique<NopCommand>());
 }
 
 } // namespace server::commands

@@ -45,6 +45,15 @@ protected:
     }
   }
 
+  template <typename T> T* CastAnyPointerToPointer(std::string_view property_name, std::any& any_value) {
+    try {
+      return std::any_cast<T*>(any_value);
+    } catch (const std::bad_any_cast&) {
+      throw std::runtime_error(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                           GetAdapterName(), GetParentAdapterName()));
+    }
+  }
+
   template <typename T> T& CastAnyRefToRef(std::string_view property_name, std::any& any_value) {
     try {
       return std::any_cast<T&>(any_value);
@@ -89,5 +98,21 @@ protected:
 };
 
 template <typename T> using Queue = std::list<T>;
+
+class InjectableCommand : public Command {
+public:
+  explicit InjectableCommand(std::unique_ptr<Command> command);
+
+  void Inject(std::unique_ptr<Command> command);
+  void Execute() override;
+  const std::unique_ptr<Command>& GetCommand() const noexcept;
+
+private:
+  std::unique_ptr<Command> command_;
+};
+
+class NopCommand : public Command {
+  void Execute() override;
+};
 
 } // namespace server::commands

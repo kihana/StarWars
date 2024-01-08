@@ -48,7 +48,7 @@ void StartRotateAdapter::DoStartAction() {
   const auto angle = GetAngle();
 
   command_queue.emplace_back(std::make_unique<SetAngle>(rotatable, angle));
-  command_queue.emplace_back(std::make_unique<Rotate>(rotatable));
+  command_queue.emplace_back(std::make_unique<InjectableCommand>(std::make_unique<Rotate>(rotatable)));
 }
 
 } // namespace server::commands

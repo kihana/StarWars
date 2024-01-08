@@ -48,7 +48,7 @@ void StartMoveAdapter::DoStartAction() {
   const auto velocity = GetVelocity();
 
   command_queue.emplace_back(std::make_unique<SetVelocity>(movable, velocity));
-  command_queue.emplace_back(std::make_unique<Move>(movable));
+  command_queue.emplace_back(std::make_unique<InjectableCommand>(std::make_unique<Move>(movable)));
 }
 
 } // namespace server::commands

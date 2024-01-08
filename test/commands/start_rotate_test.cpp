@@ -53,7 +53,9 @@ TEST_F(StartRotateTest, Common) {
   ASSERT_TRUE(set_angle_command);
   ASSERT_TRUE(rotate_command);
   ASSERT_NE(nullptr, dynamic_cast<SetAngle*>(set_angle_command.get()));
-  ASSERT_NE(nullptr, dynamic_cast<Rotate*>(rotate_command.get()));
+  ASSERT_NE(nullptr, dynamic_cast<InjectableCommand*>(rotate_command.get()));
+  ASSERT_NE(nullptr,
+            dynamic_cast<Rotate*>((dynamic_cast<InjectableCommand*>(rotate_command.get()))->GetCommand().get()));
 }
 
 TEST_F(StartRotateTest, EmptyAdapter) {

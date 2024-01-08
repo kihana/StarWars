@@ -19,10 +19,10 @@ std::string_view EndMoveAdapter::GetParentAdapterName() const {
   return kEndMoveCommandName;
 }
 
-std::unique_ptr<Command>& EndMoveAdapter::GetMoveCommand() {
+InjectableCommand* EndMoveAdapter::GetMoveCommand() {
   auto& any_move_command = GetAnyValue(kMoveCommandName);
 
-  return CastAnyPointerToRef<std::unique_ptr<Command>>(kMoveCommandName, any_move_command);
+  return CastAnyPointerToPointer<InjectableCommand>(kMoveCommandName, any_move_command);
 }
 
 std::weak_ptr<core::Object>& EndMoveAdapter::GetMovable() {
@@ -46,7 +46,7 @@ void EndMoveAdapter::DoEndAction() {
   auto& command_queue = GetCommandQueue();
   const auto& command = GetMoveCommand();
   movable->RemoveKey(kVelocityName);
-  std::erase(command_queue, command);
+  command->Inject(std::make_unique<NopCommand>());
 }
 
 } // namespace server::commands

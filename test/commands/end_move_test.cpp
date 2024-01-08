@@ -17,7 +17,7 @@ std::shared_ptr<core::Object> MakeEndMovePropertyHolder(std::weak_ptr<core::Obje
                                                         Queue<std::unique_ptr<Command>>& command_queue) {
   auto property_holder = std::make_shared<core::Object>();
   property_holder->SetValue(kMovableName, std::move(movable));
-  property_holder->SetValue(kMoveCommandName, &move_command);
+  property_holder->SetValue(kMoveCommandName, dynamic_cast<InjectableCommand*>(move_command.get()));
   property_holder->SetValue(kCommandQueueName, &command_queue);
 
   return property_holder;
@@ -57,10 +57,12 @@ TEST_F(EndMoveTest, Common) {
   EndCommand end_move(std::move(end_move_adapter_));
   end_move.Execute();
 
-  EXPECT_EQ(command_queue_.size(), 1);
+  EXPECT_EQ(command_queue_.size(), 2);
   auto& last_command = command_queue_.back();
   EXPECT_TRUE(last_command);
-  EXPECT_EQ(nullptr, dynamic_cast<Move*>(last_command.get()));
+  ASSERT_NE(nullptr, dynamic_cast<InjectableCommand*>(last_command.get()));
+  ASSERT_NE(nullptr,
+            dynamic_cast<NopCommand*>((dynamic_cast<InjectableCommand*>(last_command.get()))->GetCommand().get()));
 }
 
 TEST_F(EndMoveTest, EmptyAdapter) {

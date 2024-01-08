@@ -13,7 +13,7 @@ static std::string_view kEndMoveCommandName = "End move command";
 struct MoveEndable {
   virtual ~MoveEndable() = default;
 
-  virtual std::unique_ptr<Command>& GetMoveCommand() = 0;
+  virtual InjectableCommand* GetMoveCommand() = 0;
   virtual std::weak_ptr<core::Object>& GetMovable() = 0;
   virtual Queue<std::unique_ptr<Command>>& GetCommandQueue() = 0;
 };
@@ -25,7 +25,7 @@ public:
   void DoEndAction() override;
 
 private:
-  std::unique_ptr<Command>& GetMoveCommand() override;
+  InjectableCommand* GetMoveCommand() override;
   std::weak_ptr<core::Object>& GetMovable() override;
   Queue<std::unique_ptr<Command>>& GetCommandQueue() override;
 

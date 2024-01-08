@@ -47,7 +47,8 @@ TEST_F(StartMoveTest, Common) {
   ASSERT_TRUE(set_velocity_command);
   ASSERT_TRUE(move_command);
   ASSERT_NE(nullptr, dynamic_cast<SetVelocity*>(set_velocity_command.get()));
-  ASSERT_NE(nullptr, dynamic_cast<Move*>(move_command.get()));
+  ASSERT_NE(nullptr, dynamic_cast<InjectableCommand*>(move_command.get()));
+  ASSERT_NE(nullptr, dynamic_cast<Move*>((dynamic_cast<InjectableCommand*>(move_command.get()))->GetCommand().get()));
 }
 
 TEST_F(StartMoveTest, EmptyAdapter) {

@@ -21,7 +21,7 @@ std::shared_ptr<core::Object> MakeEndRotatePropertyHolder(std::weak_ptr<core::Ob
                                                           Queue<std::unique_ptr<Command>>& command_queue) {
   auto property_holder = std::make_shared<core::Object>();
   property_holder->SetValue(kRotatableName, std::move(rotatable));
-  property_holder->SetValue(kRotateCommandName, &rotate_command);
+  property_holder->SetValue(kRotateCommandName, dynamic_cast<InjectableCommand*>(rotate_command.get()));
   property_holder->SetValue(kCommandQueueName, &command_queue);
 
   return property_holder;
@@ -62,10 +62,12 @@ TEST_F(EndRotateTest, Common) {
   EndCommand end_rotate(std::move(end_rotate_adapter_));
   end_rotate.Execute();
 
-  EXPECT_EQ(command_queue_.size(), 1);
+  EXPECT_EQ(command_queue_.size(), 2);
   auto& last_command = command_queue_.back();
   EXPECT_TRUE(last_command);
-  EXPECT_EQ(nullptr, dynamic_cast<Rotate*>(last_command.get()));
+  EXPECT_NE(nullptr, dynamic_cast<InjectableCommand*>(last_command.get()));
+  ASSERT_NE(nullptr,
+            dynamic_cast<NopCommand*>((dynamic_cast<InjectableCommand*>(last_command.get()))->GetCommand().get()));
 }
 
 TEST_F(EndRotateTest, EmptyAdapter) {
