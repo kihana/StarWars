@@ -1,39 +1,26 @@
 #include <gtest/gtest.h>
 
+#include "core/object.h"
+
 #include "commands/rotate.h"
+#include "commands/set_angle.h"
 
-using namespace server::commands;
-using namespace server::core;
+namespace server::commands {
 
-class TestRotatable : public Rotatable {
-public:
-  Vector GetPosition() const override {
-    return position_;
-  }
-  void SetPosition(const Vector position) override {
-    position_ = position;
-  }
-  Angle GetAngle() const override {
-    return angle_;
-  }
-  void SetAngle(const Angle angle) override {
-    angle_ = angle;
-  }
+TEST(RotateTest, Common) {
+  auto property_holder = std::make_shared<core::Object>();
+  std::unique_ptr<Rotatable> rotatable = std::make_unique<RotatableAdapter>(property_holder);
+  rotatable->SetPosition({3, 2});
+  auto set_angle_adapter = std::make_unique<SetAngleAdapter>(property_holder);
+  set_angle_adapter->SetAngle(90);
 
-private:
-  Vector position_;
-  Angle angle_;
-};
-
-TEST(Utils, RotateTest) {
-  TestRotatable rotatable;
-  rotatable.SetPosition({3, 2});
-  rotatable.SetAngle(90);
-  Rotate rotate(rotatable);
+  Rotate rotate(property_holder);
   rotate.Execute();
-  EXPECT_EQ(rotatable.GetPosition(), Vector(-2, 3));
+  EXPECT_EQ(rotatable->GetPosition(), core::Vector(-2, 3));
 
-  rotatable.SetPosition({12, 5});
+  rotatable->SetPosition({12, 5});
   rotate.Execute();
-  EXPECT_EQ(rotatable.GetPosition(), Vector(-5, 12));
+  EXPECT_EQ(rotatable->GetPosition(), core::Vector(-5, 12));
 }
+
+} // namespace server::commands

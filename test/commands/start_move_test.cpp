@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "commands/start_move.h"
 #include "commands/move.h"
 #include "commands/set_velocity.h"
 #include "commands/start_move.h"
