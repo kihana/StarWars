@@ -27,12 +27,12 @@ TEST(MoveTest, EmptyMovable) {
       {
         try {
           move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' is unavailable.", kMovableName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST(MoveTest, EmptyPropertyHolder) {
@@ -43,7 +43,7 @@ TEST(MoveTest, EmptyPropertyHolder) {
       {
         try {
           move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE((e.what() == std::format("'{}' to get '{}' is unavailable in '{}'.", kMovableName, kPositionName,
                                                kMoveCommandName)) ||
                       (e.what() == std::format("'{}' to get '{}' is unavailable in '{}'.", kMovableName, kVelocityName,
@@ -51,7 +51,7 @@ TEST(MoveTest, EmptyPropertyHolder) {
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 TEST(MoveTest, NoPositionOrVelocityInMovable) {
   auto property_holder = std::make_shared<core::Object>();
@@ -61,7 +61,7 @@ TEST(MoveTest, NoPositionOrVelocityInMovable) {
       {
         try {
           move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE((e.what() == std::format("'{}' property is not specified for '{}' object in '{}'.", kPositionName,
                                                kMovableName, kMoveCommandName)) ||
                       (e.what() == std::format("'{}' property is not specified for '{}' object in '{}'.", kVelocityName,
@@ -69,7 +69,7 @@ TEST(MoveTest, NoPositionOrVelocityInMovable) {
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST(MoveTest, EmptyAnyPositionOrVelocityValueInMovable) {
@@ -82,7 +82,7 @@ TEST(MoveTest, EmptyAnyPositionOrVelocityValueInMovable) {
       {
         try {
           move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE((e.what() == std::format("'{}' property value is not specified for '{}' object in '{}'.",
                                                kPositionName, kMovableName, kMoveCommandName)) ||
                       (e.what() == std::format("'{}' property value is not specified for '{}' object in '{}'.",
@@ -90,7 +90,7 @@ TEST(MoveTest, EmptyAnyPositionOrVelocityValueInMovable) {
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST(MoveTest, WrongPositionOrVelocityTypeInMovable) {
@@ -103,7 +103,7 @@ TEST(MoveTest, WrongPositionOrVelocityTypeInMovable) {
       {
         try {
           move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE((e.what() == std::format("Unexpected type of '{}' property in '{}' object in '{}'.",
                                                kPositionName, kMovableName, kMoveCommandName)) ||
                       (e.what() == std::format("Unexpected type of '{}' property in '{}' object in '{}'.",
@@ -111,7 +111,7 @@ TEST(MoveTest, WrongPositionOrVelocityTypeInMovable) {
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 } // namespace server::commands

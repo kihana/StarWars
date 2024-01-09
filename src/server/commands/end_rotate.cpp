@@ -1,8 +1,8 @@
 #include "end_rotate.h"
 
 #include <format>
-#include <stdexcept>
 
+#include "exception.h"
 #include "rotate.h"
 #include "set_angle.h"
 
@@ -40,8 +40,8 @@ Queue<std::unique_ptr<Command>>& EndRotateAdapter::GetCommandQueue() {
 void EndRotateAdapter::DoEndAction() {
   std::shared_ptr<core::Object> rotatable = GetRotatable().lock();
   if (!rotatable)
-    throw std::runtime_error(std::format("'{}' property value is empty for '{}' object in '{}'.", kRotatableName,
-                                         kEndRotateAdapterName, kEndRotateCommandName));
+    throw sw::Exception(std::format("'{}' property value is empty for '{}' object in '{}'.", kRotatableName,
+                                    kEndRotateAdapterName, kEndRotateCommandName));
 
   auto& command_queue = GetCommandQueue();
   const auto& command = GetRotateCommand();

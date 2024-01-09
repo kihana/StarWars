@@ -1,8 +1,8 @@
 #include "start_move.h"
 
 #include <format>
-#include <stdexcept>
 
+#include "exception.h"
 #include "move.h"
 #include "set_velocity.h"
 
@@ -41,8 +41,8 @@ void StartMoveAdapter::DoStartAction() {
 
   std::shared_ptr<core::Object> movable = GetMovable().lock();
   if (!movable)
-    throw std::runtime_error(std::format("'{}' property value is empty for '{}' object in '{}'.", kMovableName,
-                                         kStartMoveAdapterName, kStartMoveCommandName));
+    throw sw::Exception(std::format("'{}' property value is empty for '{}' object in '{}'.", kMovableName,
+                                    kStartMoveAdapterName, kStartMoveCommandName));
 
   auto& command_queue = GetCommandQueue();
   const auto velocity = GetVelocity();

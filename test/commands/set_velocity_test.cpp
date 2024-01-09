@@ -20,12 +20,12 @@ TEST(SetVelocityTest, EmptyVelocitySetable) {
       {
         try {
           set_velocity.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' is unavailable.", kSetVelocityAdapterName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST(SetVelocityTest, EmptyPropertyHolder) {
@@ -35,13 +35,13 @@ TEST(SetVelocityTest, EmptyPropertyHolder) {
       {
         try {
           set_velocity.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_EQ(e.what(), std::format("'{}' to set '{}' is unavailable in '{}'.", kSetVelocityAdapterName,
                                           kVelocityName, kSetVelocityCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 } // namespace server::commands

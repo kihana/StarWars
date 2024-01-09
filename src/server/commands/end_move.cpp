@@ -1,8 +1,8 @@
 #include "end_move.h"
 
 #include <format>
-#include <stdexcept>
 
+#include "exception.h"
 #include "move.h"
 #include "set_velocity.h"
 
@@ -40,8 +40,8 @@ Queue<std::unique_ptr<Command>>& EndMoveAdapter::GetCommandQueue() {
 void EndMoveAdapter::DoEndAction() {
   std::shared_ptr<core::Object> movable = GetMovable().lock();
   if (!movable)
-    throw std::runtime_error(std::format("'{}' property value is empty for '{}' object in '{}'.", kMovableName,
-                                         kEndMoveAdapterName, kEndMoveCommandName));
+    throw sw::Exception(std::format("'{}' property value is empty for '{}' object in '{}'.", kMovableName,
+                                    kEndMoveAdapterName, kEndMoveCommandName));
 
   auto& command_queue = GetCommandQueue();
   const auto& command = GetMoveCommand();

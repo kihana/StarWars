@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
 #include <format>
-#include <stdexcept>
 
 #include "commands/end_rotate.h"
 #include "commands/rotate.h"
 #include "commands/set_angle.h"
 #include "commands/start_rotate.h"
 #include "core/object.h"
+#include "exception.h"
 #include "utils.h"
 
 namespace server::commands {
@@ -73,14 +73,14 @@ TEST_F(EndRotateTest, Common) {
 TEST_F(EndRotateTest, EmptyAdapter) {
   std::unique_ptr<EndCommandAdapter> empty_adapter;
   EndCommand end_rotate(std::move(empty_adapter));
-  EXPECT_ERROR(end_rotate, std::runtime_error, std::format("'{}' has not been initialized.", kEndCommandName));
+  EXPECT_ERROR(end_rotate, sw::Exception, std::format("'{}' has not been initialized.", kEndCommandName));
 }
 
 TEST_F(EndRotateTest, EmptyPropertyHolder) {
   std::shared_ptr<core::Object> empty_property_holder;
   std::unique_ptr<EndCommandAdapter> adapter = std::make_unique<EndRotateAdapter>(empty_property_holder);
   EndCommand end_rotate(std::move(adapter));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' to get '{}' is unavailable in '{}'.", kEndRotateAdapterName, kRotatableName,
                            kEndRotateCommandName));
 }
@@ -88,7 +88,7 @@ TEST_F(EndRotateTest, EmptyPropertyHolder) {
 TEST_F(EndRotateTest, NoRotatableInAdapter) {
   end_rotate_property_holder_->RemoveKey(kRotatableName);
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property is not specified for '{}' object in '{}'.", kRotatableName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -96,7 +96,7 @@ TEST_F(EndRotateTest, NoRotatableInAdapter) {
 TEST_F(EndRotateTest, EmptyAnyRotatableValueInAdapter) {
   end_rotate_property_holder_->SetValue(kRotatableName, std::any());
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property value is not specified for '{}' object in '{}'.", kRotatableName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -104,7 +104,7 @@ TEST_F(EndRotateTest, EmptyAnyRotatableValueInAdapter) {
 TEST_F(EndRotateTest, WrongRotatableTypeInAdapter) {
   end_rotate_property_holder_->SetValue(kRotatableName, 5);
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("Unexpected type of '{}' property in '{}' object in '{}'.", kRotatableName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -113,7 +113,7 @@ TEST_F(EndRotateTest, EmptyRotatableValueInAdapter) {
   std::weak_ptr<core::Object> rotatable;
   end_rotate_property_holder_->SetValue(kRotatableName, std::move(rotatable));
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property value is empty for '{}' object in '{}'.", kRotatableName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -121,7 +121,7 @@ TEST_F(EndRotateTest, EmptyRotatableValueInAdapter) {
 TEST_F(EndRotateTest, NoCommandQueueInAdapter) {
   end_rotate_property_holder_->RemoveKey(kCommandQueueName);
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property is not specified for '{}' object in '{}'.", kCommandQueueName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -129,7 +129,7 @@ TEST_F(EndRotateTest, NoCommandQueueInAdapter) {
 TEST_F(EndRotateTest, EmptyAnyCommandQueueValueInAdapter) {
   end_rotate_property_holder_->SetValue(kCommandQueueName, std::any());
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property value is not specified for '{}' object in '{}'.", kCommandQueueName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -137,7 +137,7 @@ TEST_F(EndRotateTest, EmptyAnyCommandQueueValueInAdapter) {
 TEST_F(EndRotateTest, WrongCommandQueueTypeInAdapter) {
   end_rotate_property_holder_->SetValue(kCommandQueueName, 5);
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("Unexpected type of '{}' property in '{}' object in '{}'.", kCommandQueueName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -145,7 +145,7 @@ TEST_F(EndRotateTest, WrongCommandQueueTypeInAdapter) {
 TEST_F(EndRotateTest, NoRotateCommandInAdapter) {
   end_rotate_property_holder_->RemoveKey(kRotateCommandName);
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property is not specified for '{}' object in '{}'.", kRotateCommandName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -153,7 +153,7 @@ TEST_F(EndRotateTest, NoRotateCommandInAdapter) {
 TEST_F(EndRotateTest, EmptyAnyRotateCommandValueInAdapter) {
   end_rotate_property_holder_->SetValue(kRotateCommandName, std::any());
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("'{}' property value is not specified for '{}' object in '{}'.", kRotateCommandName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
@@ -161,7 +161,7 @@ TEST_F(EndRotateTest, EmptyAnyRotateCommandValueInAdapter) {
 TEST_F(EndRotateTest, WrongRotateCommandTypeInAdapter) {
   end_rotate_property_holder_->SetValue(kRotateCommandName, 5);
   EndCommand end_rotate(std::move(end_rotate_adapter_));
-  EXPECT_ERROR(end_rotate, std::runtime_error,
+  EXPECT_ERROR(end_rotate, sw::Exception,
                std::format("Unexpected type of '{}' property in '{}' object in '{}'.", kRotateCommandName,
                            kEndRotateAdapterName, kEndRotateCommandName));
 }
