@@ -18,6 +18,7 @@ add_library(
   include/${PROJECT_NAME}/start_command.h
   include/${PROJECT_NAME}/start_move.h
   include/${PROJECT_NAME}/start_rotate.h
+  include/${PROJECT_NAME}/write_log_message.h
   include/command.h
   move.cpp
   rotate.cpp
@@ -25,7 +26,8 @@ add_library(
   set_velocity.cpp
   start_command.cpp
   start_move.cpp
-  start_rotate.cpp)
+  start_rotate.cpp
+  write_log_message.cpp)
 
 if(CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

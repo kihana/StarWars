@@ -14,7 +14,8 @@ add_executable(
   set_velocity_test.cpp
   start_move_test.cpp
   start_rotate_test.cpp
-  utils.h)
+  utils.h
+  write_log_message_test.cpp)
 
 if(CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

@@ -63,6 +63,15 @@ protected:
     }
   }
 
+  template <typename T> const T& CastAnyRefToRef(std::string_view property_name, const std::any& any_value) const {
+    try {
+      return std::any_cast<const T&>(any_value);
+    } catch (const std::bad_any_cast&) {
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
+    }
+  }
+
   template <typename T> T CastAnyRefToValue(std::string_view property_name, const std::any& any_value) const {
     try {
       return std::any_cast<T>(any_value);
