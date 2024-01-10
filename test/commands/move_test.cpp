@@ -3,6 +3,7 @@
 #include "commands/move.h"
 #include "commands/set_velocity.h"
 #include "core/object.h"
+#include "utils.h"
 
 namespace server::commands {
 
@@ -23,16 +24,7 @@ TEST(MoveTest, Common) {
 TEST(MoveTest, EmptyMovable) {
   std::unique_ptr<Movable> empty_movable;
   Move move(std::move(empty_movable));
-  EXPECT_THROW(
-      {
-        try {
-          move.Execute();
-        } catch (const sw::Exception& e) {
-          EXPECT_TRUE(e.what() == std::format("'{}' is unavailable.", kMovableName));
-          throw;
-        }
-      },
-      sw::Exception);
+  EXPECT_ERROR(move, sw::Exception, std::format("'{}' is unavailable.", kMovableName));
 }
 
 TEST(MoveTest, EmptyPropertyHolder) {

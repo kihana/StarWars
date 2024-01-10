@@ -8,6 +8,7 @@ add_executable(
   ${PROJECT_NAME}
   end_move_test.cpp
   end_rotate_test.cpp
+  exception_handler_test.cpp
   move_test.cpp
   rotate_test.cpp
   set_velocity_test.cpp
