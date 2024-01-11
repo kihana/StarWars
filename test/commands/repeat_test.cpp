@@ -11,7 +11,7 @@ namespace server::commands {
 
 static Queue<std::shared_ptr<Command>> g_command_queue;
 
-std::shared_ptr<Repeatable> MakeRepeatAdapter(const std::shared_ptr<Command>& command) {
+static std::shared_ptr<Repeatable> MakeRepeatAdapter(const std::shared_ptr<Command>& command) {
   auto property_holder = std::make_shared<core::Object>();
   property_holder->SetValue(kCommandName, command);
 

@@ -6,6 +6,7 @@
 
 #include "commands/exception_handler.h"
 #include "commands/move.h"
+#include "commands/repeat.h"
 #include "commands/write_log_message.h"
 
 namespace fs = std::filesystem;
@@ -54,6 +55,33 @@ void WriteExceptionMessageHandler(const std::exception& e, const std::shared_ptr
   logger.Execute();
 
   const auto log_content = GetLogContent(kLogPath);
+  EXPECT_EQ(1, log_content.size());
+  EXPECT_EQ(e.what(), log_content.back());
+};
+
+static std::shared_ptr<Repeatable> MakeRepeatAdapter(const std::shared_ptr<Command>& command) {
+  auto property_holder = std::make_shared<core::Object>();
+  property_holder->SetValue(kCommandName, command);
+
+  return std::make_shared<RepeatAdapter>(property_holder);
+}
+
+static void RepeatMoveExceptionHandler(const std::exception& e, const std::shared_ptr<Command>& command) {
+  EXPECT_EQ(e.what(), std::format("'{}' is unavailable.", kMovableName));
+
+  const auto adapter = MakeRepeatAdapter(command);
+  g_command_queue.push_back(std::make_shared<Repeat>(adapter));
+};
+
+static void RepeatExceptionHandler(const std::exception& e, const std::shared_ptr<Command>& command) {
+  EXPECT_EQ(e.what(), std::format("'{}' is unavailable.", kMovableName));
+
+  auto adapter = MakeWriteLogMessageAdapter(e.what());
+  WriteLogMessage logger(adapter);
+  logger.Execute();
+
+  const auto log_content = GetLogContent(kLogPath);
+  EXPECT_EQ(1, log_content.size());
   EXPECT_EQ(e.what(), log_content.back());
 };
 
@@ -66,6 +94,8 @@ auto add_write_exception_message_to_command_queue = [](const std::exception& e, 
 class CommandExceptionHandlingTest : public testing::Test {
 protected:
   void SetUp() override {
+    if (fs::exists(kLogPath))
+      throw std::runtime_error(std::format("File '{}' should not exist.", kLogPath.generic_string()));
   }
 
   void TearDown() override {
@@ -131,6 +161,31 @@ TEST_F(CommandExceptionHandlingTest, AddWriteExceptionToCommandQueue) {
   }
 
   const auto log_content = GetLogContent(kLogPath);
+  EXPECT_EQ(1, log_content.size());
+  EXPECT_EQ(std::format("'{}' is unavailable.", kMovableName), log_content.back());
+}
+
+TEST_F(CommandExceptionHandlingTest, RepeatThenWriteException) {
+  ExceptionHandler::Instance().AddHandler<sw::Exception, Move>(RepeatMoveExceptionHandler);
+  ExceptionHandler::Instance().AddHandler<sw::Exception, Repeat>(RepeatExceptionHandler);
+
+  std::unique_ptr<Movable> empty_movable;
+
+  g_command_queue.push_back(std::make_shared<Move>(std::move(empty_movable)));
+
+  while (!g_command_queue.empty()) {
+    const auto command = std::move(g_command_queue.front());
+    g_command_queue.pop_front();
+
+    try {
+      command->Execute();
+    } catch (const std::exception& e) {
+      ExceptionHandler::Instance().Handle(e, command);
+    }
+  }
+
+  const auto log_content = GetLogContent(kLogPath);
+  EXPECT_EQ(1, log_content.size());
   EXPECT_EQ(std::format("'{}' is unavailable.", kMovableName), log_content.back());
 }
 
