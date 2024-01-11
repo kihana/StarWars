@@ -18,6 +18,7 @@ add_library(
   include/${PROJECT_NAME}/macro_command.h
   include/${PROJECT_NAME}/move.h
   include/${PROJECT_NAME}/repeat.h
+  include/${PROJECT_NAME}/repeat_n.h
   include/${PROJECT_NAME}/rotate.h
   include/${PROJECT_NAME}/set_angle.h
   include/${PROJECT_NAME}/set_velocity.h
@@ -29,6 +30,7 @@ add_library(
   macro_command.cpp
   move.cpp
   repeat.cpp
+  repeat_n.cpp
   rotate.cpp
   set_angle.cpp
   set_velocity.cpp

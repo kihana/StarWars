@@ -8,31 +8,17 @@
 #include "commands/move.h"
 #include "commands/repeat.h"
 #include "commands/write_log_message.h"
+#include "utils.h"
 
 namespace fs = std::filesystem;
 
 namespace server::commands {
 
-const fs::path kLogPath = "exception_handler_test.log";
+static const fs::path kLogPath = "exception_handler_test.log";
 
 static Queue<std::shared_ptr<Command>> g_command_queue;
 
-std::vector<std::string> GetLogContent(const fs::path& log_path) {
-  std::vector<std::string> content;
-
-  std::ifstream file(log_path);
-  if (file.is_open()) {
-    std::string line;
-    while (std::getline(file, line)) {
-      content.push_back(std::move(line));
-      line.clear();
-    }
-  }
-
-  return content;
-}
-
-std::shared_ptr<WriteLogMessageAdapter> MakeWriteLogMessageAdapter(const std::string& message) {
+static std::shared_ptr<WriteLogMessageAdapter> MakeWriteLogMessageAdapter(const std::string& message) {
   auto property_holder = std::make_shared<core::Object>();
   property_holder->SetValue(kLogPathName, kLogPath);
   property_holder->SetValue(kLogMessageName, message);
@@ -54,7 +40,7 @@ void WriteExceptionMessageHandler(const std::exception& e, const std::shared_ptr
   WriteLogMessage logger(adapter);
   logger.Execute();
 
-  const auto log_content = GetLogContent(kLogPath);
+  const auto log_content = sw::GetLogContent(kLogPath);
   EXPECT_EQ(1, log_content.size());
   EXPECT_EQ(e.what(), log_content.back());
 };
@@ -80,7 +66,7 @@ static void RepeatExceptionHandler(const std::exception& e, const std::shared_pt
   WriteLogMessage logger(adapter);
   logger.Execute();
 
-  const auto log_content = GetLogContent(kLogPath);
+  const auto log_content = sw::GetLogContent(kLogPath);
   EXPECT_EQ(1, log_content.size());
   EXPECT_EQ(e.what(), log_content.back());
 };
@@ -160,7 +146,7 @@ TEST_F(CommandExceptionHandlingTest, AddWriteExceptionToCommandQueue) {
     }
   }
 
-  const auto log_content = GetLogContent(kLogPath);
+  const auto log_content = sw::GetLogContent(kLogPath);
   EXPECT_EQ(1, log_content.size());
   EXPECT_EQ(std::format("'{}' is unavailable.", kMovableName), log_content.back());
 }
@@ -184,7 +170,7 @@ TEST_F(CommandExceptionHandlingTest, RepeatThenWriteException) {
     }
   }
 
-  const auto log_content = GetLogContent(kLogPath);
+  const auto log_content = sw::GetLogContent(kLogPath);
   EXPECT_EQ(1, log_content.size());
   EXPECT_EQ(std::format("'{}' is unavailable.", kMovableName), log_content.back());
 }
