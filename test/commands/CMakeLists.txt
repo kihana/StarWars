@@ -10,6 +10,7 @@ add_executable(
   end_rotate_test.cpp
   exception_handler_test.cpp
   move_test.cpp
+  repeat_test.cpp
   rotate_test.cpp
   set_velocity_test.cpp
   start_move_test.cpp
