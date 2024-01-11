@@ -4,7 +4,7 @@
   EXPECT_THROW(                                                                                                        \
       {                                                                                                                \
         try {                                                                                                          \
-          command.Execute();                                                                                           \
+          (command).Execute();                                                                                         \
         } catch (const TException& e) {                                                                                \
           EXPECT_EQ(e.what(), message);                                                                                \
           throw;                                                                                                       \
