@@ -15,7 +15,7 @@ add_library(
   include/${PROJECT_NAME}/end_move.h
   include/${PROJECT_NAME}/end_rotate.h
   include/${PROJECT_NAME}/exception_handler.h
-  #include/${PROJECT_NAME}/macro_command.h
+  include/${PROJECT_NAME}/macro_command.h
   include/${PROJECT_NAME}/move.h
   include/${PROJECT_NAME}/repeat.h
   include/${PROJECT_NAME}/repeat_n.h
@@ -27,7 +27,7 @@ add_library(
   include/${PROJECT_NAME}/start_rotate.h
   include/${PROJECT_NAME}/write_log_message.h
   include/command.h
-  #macro_command.cpp
+  macro_command.cpp
   move.cpp
   repeat.cpp
   repeat_n.cpp
