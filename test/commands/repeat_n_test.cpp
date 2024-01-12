@@ -48,14 +48,16 @@ protected:
     move_counter_ = 0;
     command_to_repeat_ = std::make_shared<Move>(std::unique_ptr<Movable>());
     g_command_queue.push_back(command_to_repeat_);
-    ExceptionHandler::Instance().AddHandler<sw::Exception, Move>(MoveExceptionHandler);
-    ExceptionHandler::Instance().AddHandler<sw::Exception, RepeatN>(RepeatExceptionHandler);
+    ExceptionHandler::Instance().AddHandler<std::exception, Move>(MoveExceptionHandler);
+    ExceptionHandler::Instance().AddHandler<std::exception, RepeatN>(RepeatExceptionHandler);
     ExceptionHandler::Instance().AddHandler<RepeatNException, RepeatN>(WriteMessageExceptionHandler);
   }
 
   void TearDown() override {
     if (fs::exists(kLogPath) && !fs::remove(kLogPath))
       throw std::runtime_error(std::format("Failed to remove '{}' log file.", kLogPath.generic_string()));
+
+    ExceptionHandler::Instance().Clean();
   }
 
   std::shared_ptr<Command> command_to_repeat_;

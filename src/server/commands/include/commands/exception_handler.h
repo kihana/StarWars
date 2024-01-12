@@ -38,6 +38,7 @@ public:
   }
 
   void Handle(const std::exception& exception, const std::shared_ptr<Command>& command);
+  void Clean();
 
 private:
   ExceptionHandler() = default;
