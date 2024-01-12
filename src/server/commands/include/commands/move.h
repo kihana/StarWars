@@ -36,12 +36,12 @@ private:
 class Move : public Command {
 public:
   explicit Move(const std::shared_ptr<core::Object>& movable);
-  explicit Move(std::unique_ptr<Movable> movable);
+  explicit Move(std::shared_ptr<Movable> movable);
 
   void Execute();
 
 private:
-  std::unique_ptr<Movable> movable_;
+  std::shared_ptr<Movable> movable_;
 };
 
 } // namespace server::commands

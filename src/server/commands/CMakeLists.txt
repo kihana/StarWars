@@ -4,17 +4,20 @@ project(commands LANGUAGES CXX)
 
 add_library(
   ${PROJECT_NAME} STATIC
+  check_fuel.cpp
   command.cpp
   end_command.cpp
   end_move.cpp
   end_rotate.cpp
   exception_handler.cpp
+  include/${PROJECT_NAME}/check_fuel.h
   include/${PROJECT_NAME}/end_command.h
   include/${PROJECT_NAME}/end_move.h
   include/${PROJECT_NAME}/end_rotate.h
   include/${PROJECT_NAME}/exception_handler.h
   include/${PROJECT_NAME}/macro_command.h
   include/${PROJECT_NAME}/move.h
+  include/${PROJECT_NAME}/property_names.h
   include/${PROJECT_NAME}/repeat.h
   include/${PROJECT_NAME}/repeat_n.h
   include/${PROJECT_NAME}/rotate.h
