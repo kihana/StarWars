@@ -1,9 +1,9 @@
 ﻿#include "move.h"
 
 #include <format>
-#include <stdexcept>
 
 #include "commands/set_velocity.h"
+#include "exception.h"
 
 namespace server::commands {
 
@@ -42,7 +42,7 @@ Move::Move(std::unique_ptr<Movable> movable) : movable_(std::move(movable)) {
 
 void Move::Execute() {
   if (!movable_)
-    throw std::runtime_error(std::format("'{}' is unavailable.", kMovableName));
+    throw sw::Exception(std::format("'{}' is unavailable.", kMovableName));
 
   movable_->SetPosition(movable_->GetPosition() + movable_->GetVelocity());
 }

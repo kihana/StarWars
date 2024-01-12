@@ -1,7 +1,8 @@
 #include "start_command.h"
 
 #include <format>
-#include <stdexcept>
+
+#include "exception.h"
 
 namespace server::commands {
 
@@ -13,7 +14,7 @@ StartCommand::StartCommand(std::unique_ptr<StartCommandAdapter> adapter) : adapt
 
 void StartCommand::Execute() {
   if (!adapter_)
-    throw std::runtime_error(std::format("'{}' has not been initialized.", kStartCommandName));
+    throw sw::Exception(std::format("'{}' has not been initialized.", kStartCommandName));
 
   adapter_->DoStartAction();
 }

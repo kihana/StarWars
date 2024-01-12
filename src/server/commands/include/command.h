@@ -4,10 +4,10 @@
 #include <format>
 #include <list>
 #include <memory>
-#include <stdexcept>
 #include <string_view>
 
 #include "core/object.h"
+#include "exception.h"
 
 namespace server::commands {
 
@@ -30,8 +30,8 @@ protected:
 
   template <typename T> void SetValue(std::string_view property_name, T value) {
     if (!property_holder_)
-      throw std::runtime_error(std::format("'{}' to set '{}' is unavailable in '{}'.", GetAdapterName(), property_name,
-                                           GetParentAdapterName()));
+      throw sw::Exception(std::format("'{}' to set '{}' is unavailable in '{}'.", GetAdapterName(), property_name,
+                                      GetParentAdapterName()));
 
     property_holder_->SetValue(property_name, value);
   }
@@ -40,8 +40,17 @@ protected:
     try {
       return *std::any_cast<T*>(any_value);
     } catch (const std::bad_any_cast&) {
-      throw std::runtime_error(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
-                                           GetAdapterName(), GetParentAdapterName()));
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
+    }
+  }
+
+  template <typename T> T& CastAnyPointerToRef(std::string_view property_name, const std::any& any_value) const {
+    try {
+      return *std::any_cast<T*>(any_value);
+    } catch (const std::bad_any_cast&) {
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
     }
   }
 
@@ -49,8 +58,8 @@ protected:
     try {
       return std::any_cast<T*>(any_value);
     } catch (const std::bad_any_cast&) {
-      throw std::runtime_error(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
-                                           GetAdapterName(), GetParentAdapterName()));
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
     }
   }
 
@@ -58,8 +67,17 @@ protected:
     try {
       return std::any_cast<T&>(any_value);
     } catch (const std::bad_any_cast&) {
-      throw std::runtime_error(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
-                                           GetAdapterName(), GetParentAdapterName()));
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
+    }
+  }
+
+  template <typename T> const T& CastAnyRefToRef(std::string_view property_name, const std::any& any_value) const {
+    try {
+      return std::any_cast<const T&>(any_value);
+    } catch (const std::bad_any_cast&) {
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
     }
   }
 
@@ -67,8 +85,8 @@ protected:
     try {
       return std::any_cast<T>(any_value);
     } catch (const std::bad_any_cast&) {
-      throw std::runtime_error(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
-                                           GetAdapterName(), GetParentAdapterName()));
+      throw sw::Exception(std::format("Unexpected type of '{}' property in '{}' object in '{}'.", property_name,
+                                      GetAdapterName(), GetParentAdapterName()));
     }
   }
 
@@ -78,18 +96,18 @@ private:
 
   template <typename T> static auto& GetAnyValueImpl(T& self, std::string_view property_name) {
     if (!self.property_holder_)
-      throw std::runtime_error(std::format("'{}' to get '{}' is unavailable in '{}'.", self.GetAdapterName(),
-                                           property_name, self.GetParentAdapterName()));
+      throw sw::Exception(std::format("'{}' to get '{}' is unavailable in '{}'.", self.GetAdapterName(), property_name,
+                                      self.GetParentAdapterName()));
     try {
       auto& any_value = self.property_holder_->GetValue(property_name);
       if (!any_value.has_value())
-        throw std::runtime_error(std::format("'{}' property value is not specified for '{}' object in '{}'.",
-                                             property_name, self.GetAdapterName(), self.GetParentAdapterName()));
+        throw sw::Exception(std::format("'{}' property value is not specified for '{}' object in '{}'.", property_name,
+                                        self.GetAdapterName(), self.GetParentAdapterName()));
 
       return any_value;
     } catch (const std::out_of_range&) {
-      throw std::runtime_error(std::format("'{}' property is not specified for '{}' object in '{}'.", property_name,
-                                           self.GetAdapterName(), self.GetParentAdapterName()));
+      throw sw::Exception(std::format("'{}' property is not specified for '{}' object in '{}'.", property_name,
+                                      self.GetAdapterName(), self.GetParentAdapterName()));
     }
   }
 

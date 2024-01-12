@@ -1,8 +1,8 @@
 #include "start_rotate.h"
 
 #include <format>
-#include <stdexcept>
 
+#include "exception.h"
 #include "rotate.h"
 #include "set_angle.h"
 
@@ -41,8 +41,8 @@ void StartRotateAdapter::DoStartAction() {
 
   std::shared_ptr<core::Object> rotatable = GetRotatable().lock();
   if (!rotatable)
-    throw std::runtime_error(std::format("'{}' property value is empty for '{}' object in '{}'.", kRotatableName,
-                                         kStartRotateAdapterName, kStartRotateCommandName));
+    throw sw::Exception(std::format("'{}' property value is empty for '{}' object in '{}'.", kRotatableName,
+                                    kStartRotateAdapterName, kStartRotateCommandName));
 
   auto& command_queue = GetCommandQueue();
   const auto angle = GetAngle();

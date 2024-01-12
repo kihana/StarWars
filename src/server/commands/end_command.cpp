@@ -1,7 +1,8 @@
 #include "end_command.h"
 
 #include <format>
-#include <stdexcept>
+
+#include "exception.h"
 
 namespace server::commands {
 
@@ -13,7 +14,7 @@ EndCommand::EndCommand(std::unique_ptr<EndCommandAdapter> adapter) : adapter_(st
 
 void EndCommand::Execute() {
   if (!adapter_)
-    throw std::runtime_error(std::format("'{}' has not been initialized.", kEndCommandName));
+    throw sw::Exception(std::format("'{}' has not been initialized.", kEndCommandName));
 
   adapter_->DoEndAction();
 }

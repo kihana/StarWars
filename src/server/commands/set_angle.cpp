@@ -1,9 +1,9 @@
 #include "set_angle.h"
 
 #include <format>
-#include <stdexcept>
 
 #include "core/object.h"
+#include "exception.h"
 
 namespace server::commands {
 
@@ -32,7 +32,7 @@ SetAngle::SetAngle(std::unique_ptr<AngleSetable> angle_setable, const core::Angl
 
 void SetAngle::Execute() {
   if (!angle_setable_)
-    throw std::runtime_error(std::format("'{}' is unavailable.", kSetAngleAdapterName));
+    throw sw::Exception(std::format("'{}' is unavailable.", kSetAngleAdapterName));
 
   angle_setable_->SetAngle(angle_);
 }

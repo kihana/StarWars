@@ -58,12 +58,12 @@ TEST_F(StartMoveTest, EmptyAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_EQ(e.what(), std::format("'{}' has not been initialized.", kStartCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, EmptyPropertyHolder) {
@@ -74,13 +74,13 @@ TEST_F(StartMoveTest, EmptyPropertyHolder) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' to get '{}' is unavailable in '{}'.", kStartMoveAdapterName,
                                               kMovableName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, NoMovableInAdapter) {
@@ -92,13 +92,13 @@ TEST_F(StartMoveTest, NoMovableInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' property is not specified for '{}' object in '{}'.", kMovableName,
                                               kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, EmptyAnyMovableValueInAdapter) {
@@ -110,13 +110,13 @@ TEST_F(StartMoveTest, EmptyAnyMovableValueInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' property value is not specified for '{}' object in '{}'.",
                                               kMovableName, kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, WrongMovableTypeInAdapter) {
@@ -128,13 +128,13 @@ TEST_F(StartMoveTest, WrongMovableTypeInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("Unexpected type of '{}' property in '{}' object in '{}'.", kMovableName,
                                               kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, EmptyMovableValueInAdapter) {
@@ -145,13 +145,13 @@ TEST_F(StartMoveTest, EmptyMovableValueInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_EQ(e.what(), std::format("'{}' property value is empty for '{}' object in '{}'.", kMovableName,
                                           kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, NoCommandQueueInAdapter) {
@@ -163,13 +163,13 @@ TEST_F(StartMoveTest, NoCommandQueueInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' property is not specified for '{}' object in '{}'.",
                                               kCommandQueueName, kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, EmptyAnyCommandQueueValueInAdapter) {
@@ -181,13 +181,13 @@ TEST_F(StartMoveTest, EmptyAnyCommandQueueValueInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' property value is not specified for '{}' object in '{}'.",
                                               kCommandQueueName, kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, WrongCommandQueueTypeInAdapter) {
@@ -199,13 +199,13 @@ TEST_F(StartMoveTest, WrongCommandQueueTypeInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("Unexpected type of '{}' property in '{}' object in '{}'.",
                                               kCommandQueueName, kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, NoVelocityInAdapter) {
@@ -217,13 +217,13 @@ TEST_F(StartMoveTest, NoVelocityInAdapter) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' property is not specified for '{}' object in '{}'.", kVelocityName,
                                               kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, EmptyAnyVelocityValueInOrder) {
@@ -235,13 +235,13 @@ TEST_F(StartMoveTest, EmptyAnyVelocityValueInOrder) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("'{}' property value is not specified for '{}' object in '{}'.",
                                               kVelocityName, kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 TEST_F(StartMoveTest, WrongVelocityTypeInOrder) {
@@ -253,13 +253,13 @@ TEST_F(StartMoveTest, WrongVelocityTypeInOrder) {
       {
         try {
           start_move.Execute();
-        } catch (const std::runtime_error& e) {
+        } catch (const sw::Exception& e) {
           EXPECT_TRUE(e.what() == std::format("Unexpected type of '{}' property in '{}' object in '{}'.", kVelocityName,
                                               kStartMoveAdapterName, kStartMoveCommandName));
           throw;
         }
       },
-      std::runtime_error);
+      sw::Exception);
 }
 
 } // namespace server::commands

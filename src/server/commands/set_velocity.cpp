@@ -1,9 +1,9 @@
 #include "set_velocity.h"
 
 #include <format>
-#include <stdexcept>
 
 #include "core/object.h"
+#include "exception.h"
 
 namespace server::commands {
 
@@ -33,7 +33,7 @@ SetVelocity::SetVelocity(std::unique_ptr<VelocitySetable> velocity_setable, cons
 
 void SetVelocity::Execute() {
   if (!velocity_setable_)
-    throw std::runtime_error(std::format("'{}' is unavailable.", kSetVelocityAdapterName));
+    throw sw::Exception(std::format("'{}' is unavailable.", kSetVelocityAdapterName));
 
   velocity_setable_->SetVelocity(velocity_);
 }
