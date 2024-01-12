@@ -19,6 +19,10 @@ double CheckFuelAdapter::GetFuelLevel() const {
   return CastAnyRefToValue<double>(propery_names::kFuelLevel, any_fuel_level);
 }
 
+void CheckFuelAdapter::SetRequiredFulelLevel(double value) {
+  SetValue(propery_names::kRequiredFuelLevel, value);
+}
+
 core::Vector CheckFuelAdapter::GetPosition() const {
   const auto& any_position = GetAnyValue(kPositionName);
 
@@ -65,6 +69,8 @@ void CheckFuel::Execute() {
   if (GreaterThan(required_fuel, current_fuel, 0.1))
     throw sw::Exception(
         std::format("Insufficient fuel. Current amount: {:.1f}, required amount: {:.1f}", current_fuel, required_fuel));
+
+  adapter_->SetRequiredFulelLevel(required_fuel);
 }
 
 } // namespace server::commands

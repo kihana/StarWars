@@ -15,6 +15,7 @@ struct FuelCheckable {
   virtual ~FuelCheckable() = default;
 
   virtual double GetFuelLevel() const = 0;
+  virtual void SetRequiredFulelLevel(double value) = 0;
   virtual core::Vector GetPosition() const = 0;
   virtual core::Vector GetVelocity() const = 0;
   virtual double GetBurnFuelVelocity() const = 0;
@@ -25,6 +26,7 @@ public:
   explicit CheckFuelAdapter(const std::shared_ptr<core::Object>& fuel_checkable);
 
   double GetFuelLevel() const override;
+  void SetRequiredFulelLevel(double value) override;
   core::Vector GetPosition() const override;
   core::Vector GetVelocity() const override;
   double GetBurnFuelVelocity() const override;

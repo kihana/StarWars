@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "commands/burn_fuel.h"
 #include "commands/check_fuel.h"
 #include "commands/macro_command.h"
 #include "commands/move.h"
@@ -27,15 +28,18 @@ protected:
     set_velocity_ = std::make_shared<SetVelocity>(movable_, core::Vector{-7, 3});
     check_fuel_adapter_ = std::make_shared<CheckFuelAdapter>(movable_);
     check_fuel_ = std::make_shared<CheckFuel>(check_fuel_adapter_);
+    burn_fuel_ = std::make_shared<BurnFuel>(std::make_shared<BurnFuelAdapter>(movable_));
     move_adapter_ = std::make_shared<MovableAdapter>(movable_);
     move_ = std::make_shared<Move>(move_adapter_);
-    macro_command_ = std::make_shared<MacroCommand>(std::vector<std::shared_ptr<Command>>{check_fuel_, move_});
+    macro_command_ =
+        std::make_shared<MacroCommand>(std::vector<std::shared_ptr<Command>>{check_fuel_, move_, burn_fuel_});
   }
 
   std::shared_ptr<core::Object> movable_;
   std::shared_ptr<Command> set_velocity_;
   std::shared_ptr<FuelCheckable> check_fuel_adapter_;
   std::shared_ptr<Command> check_fuel_;
+  std::shared_ptr<Command> burn_fuel_;
   std::shared_ptr<MovableAdapter> move_adapter_;
   std::shared_ptr<Command> move_;
   std::shared_ptr<Command> macro_command_;
