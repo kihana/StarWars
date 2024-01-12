@@ -7,6 +7,7 @@ add_executable(
   end_move_test.cpp
   end_rotate_test.cpp
   exception_handler_test.cpp
+  macro_command_test.cpp
   move_test.cpp
   repeat_n_test.cpp
   repeat_test.cpp
