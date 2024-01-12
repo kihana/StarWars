@@ -1,16 +1,15 @@
-﻿cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.8)
 
-project("core" LANGUAGES CXX)
+project(core LANGUAGES CXX)
 
-add_library(${PROJECT_NAME} STATIC "object.cpp" "include/core/object.h" "vector.cpp" "include/core/vector.h" "include/core/angle.h")
+add_library(${PROJECT_NAME} STATIC include/${PROJECT_NAME}/angle.h include/${PROJECT_NAME}/object.h
+                                   include/${PROJECT_NAME}/vector.h object.cpp vector.cpp)
 
-if(CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-endif()
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake/include/Common.cmake)
+
+target_include_directories(
+  ${PROJECT_NAME}
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "server")
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/core
-)

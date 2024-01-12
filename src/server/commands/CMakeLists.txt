@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 
 project(commands LANGUAGES CXX)
 
-find_package(Boost REQUIRED)
-
 add_library(
   ${PROJECT_NAME} STATIC
   command.cpp
@@ -15,7 +13,7 @@ add_library(
   include/${PROJECT_NAME}/end_move.h
   include/${PROJECT_NAME}/end_rotate.h
   include/${PROJECT_NAME}/exception_handler.h
-  #include/${PROJECT_NAME}/macro_command.h
+  include/${PROJECT_NAME}/macro_command.h
   include/${PROJECT_NAME}/move.h
   include/${PROJECT_NAME}/repeat.h
   include/${PROJECT_NAME}/repeat_n.h
@@ -27,7 +25,7 @@ add_library(
   include/${PROJECT_NAME}/start_rotate.h
   include/${PROJECT_NAME}/write_log_message.h
   include/command.h
-  #macro_command.cpp
+  macro_command.cpp
   move.cpp
   repeat.cpp
   repeat_n.cpp
@@ -39,9 +37,9 @@ add_library(
   start_rotate.cpp
   write_log_message.cpp)
 
-if(CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-endif()
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake/include/Common.cmake)
+
+find_package(Boost REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC core)
 
