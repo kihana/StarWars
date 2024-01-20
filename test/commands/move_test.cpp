@@ -9,16 +9,16 @@ namespace server::commands {
 
 TEST(MoveTest, Common) {
   auto movable_object = std::make_shared<core::Object>();
-  MovableAdapter movable_adtapter(movable_object);
-  movable_adtapter.SetPosition({12, 5});
+  MovableAdapter move_adapter(movable_object);
+  move_adapter.SetPosition({12, 5});
   VelocitySetableAdapter velocity_setable_adapter(movable_object);
   velocity_setable_adapter.SetVelocity({-7, 3});
   Move move(movable_object);
   move.Execute();
-  EXPECT_EQ(movable_adtapter.GetPosition(), core::Vector(5, 8));
+  EXPECT_EQ(move_adapter.GetPosition(), core::Vector(5, 8));
 
   move.Execute();
-  EXPECT_EQ(movable_adtapter.GetPosition(), core::Vector(-2, 11));
+  EXPECT_EQ(move_adapter.GetPosition(), core::Vector(-2, 11));
 }
 
 TEST(MoveTest, EmptyMovable) {

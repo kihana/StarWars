@@ -37,7 +37,7 @@ core::Vector MovableAdapter::GetVelocity() const {
 Move::Move(const std::shared_ptr<core::Object>& movable) : movable_(std::make_unique<MovableAdapter>(movable)) {
 }
 
-Move::Move(std::unique_ptr<Movable> movable) : movable_(std::move(movable)) {
+Move::Move(std::shared_ptr<Movable> movable) : movable_(std::move(movable)) {
 }
 
 void Move::Execute() {

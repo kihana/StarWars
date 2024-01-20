@@ -2,13 +2,12 @@ cmake_minimum_required(VERSION 3.8)
 
 project(commands_test LANGUAGES CXX)
 
-find_package(GTest REQUIRED)
-
 add_executable(
   ${PROJECT_NAME}
   end_move_test.cpp
   end_rotate_test.cpp
   exception_handler_test.cpp
+  macro_command_test.cpp
   move_test.cpp
   repeat_n_test.cpp
   repeat_test.cpp
@@ -19,9 +18,9 @@ add_executable(
   utils.h
   write_log_message_test.cpp)
 
-if(CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
-endif()
+include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/include/Common.cmake)
+
+find_package(GTest REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE commands GTest::gtest_main)
 

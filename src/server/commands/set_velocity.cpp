@@ -27,7 +27,7 @@ SetVelocity::SetVelocity(const std::shared_ptr<core::Object>& velocity_setable, 
     : velocity_setable_(std::make_unique<VelocitySetableAdapter>(velocity_setable)), velocity_(velocity) {
 }
 
-SetVelocity::SetVelocity(std::unique_ptr<VelocitySetable> velocity_setable, const core::Vector velocity)
+SetVelocity::SetVelocity(std::shared_ptr<VelocitySetable> velocity_setable, const core::Vector velocity)
     : velocity_setable_(std::move(velocity_setable)), velocity_(velocity) {
 }
 

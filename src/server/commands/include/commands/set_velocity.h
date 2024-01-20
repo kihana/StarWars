@@ -34,12 +34,12 @@ private:
 class SetVelocity : public Command {
 public:
   SetVelocity(const std::shared_ptr<core::Object>& velocity_setable, core::Vector velocity);
-  SetVelocity(std::unique_ptr<VelocitySetable> velocity_setable, core::Vector velocity);
+  SetVelocity(std::shared_ptr<VelocitySetable> velocity_setable, core::Vector velocity);
 
   void Execute() override;
 
 private:
-  std::unique_ptr<VelocitySetable> velocity_setable_;
+  std::shared_ptr<VelocitySetable> velocity_setable_;
   core::Vector velocity_;
 };
 
