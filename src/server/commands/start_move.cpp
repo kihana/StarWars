@@ -47,7 +47,8 @@ void StartMoveAdapter::DoStartAction() {
   auto& command_queue = GetCommandQueue();
   const auto velocity = GetVelocity();
 
-  command_queue.emplace_back(std::make_unique<SetVelocity>(movable, velocity));
+  auto set_velovity_adapter = std::make_shared<VelocitySetableAdapter>(movable);
+  command_queue.emplace_back(std::make_unique<SetVelocity>(std::move(set_velovity_adapter), velocity));
   command_queue.emplace_back(std::make_unique<InjectableCommand>(std::make_unique<Move>(movable)));
 }
 

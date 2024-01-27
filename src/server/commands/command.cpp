@@ -4,7 +4,7 @@
 
 namespace server::commands {
 
-Adapter::Adapter(const std::shared_ptr<core::Object>& property_holder) : property_holder_(property_holder) {
+Adapter::Adapter(std::shared_ptr<core::Object> property_holder) : property_holder_(std::move(property_holder)) {
 }
 
 std::any& Adapter::GetAnyValue(std::string_view property_name) {

@@ -21,7 +21,7 @@ struct Command {
 
 class Adapter {
 public:
-  explicit Adapter(const std::shared_ptr<core::Object>& property_holder);
+  explicit Adapter(std::shared_ptr<core::Object> property_holder);
   virtual ~Adapter() = default;
 
 protected:

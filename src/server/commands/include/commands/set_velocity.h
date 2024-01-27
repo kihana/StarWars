@@ -22,7 +22,7 @@ struct VelocitySetable {
 
 class VelocitySetableAdapter : public VelocitySetable, public Adapter {
 public:
-  explicit VelocitySetableAdapter(const std::shared_ptr<core::Object>& velocity_setable);
+  explicit VelocitySetableAdapter(std::shared_ptr<core::Object> velocity_setable);
 
   void SetVelocity(core::Vector value) override;
 
@@ -33,13 +33,12 @@ private:
 
 class SetVelocity : public Command {
 public:
-  SetVelocity(const std::shared_ptr<core::Object>& velocity_setable, core::Vector velocity);
-  SetVelocity(std::shared_ptr<VelocitySetable> velocity_setable, core::Vector velocity);
+  SetVelocity(std::shared_ptr<VelocitySetable> adapter, core::Vector velocity);
 
   void Execute() override;
 
 private:
-  std::shared_ptr<VelocitySetable> velocity_setable_;
+  std::shared_ptr<VelocitySetable> adapter_;
   core::Vector velocity_;
 };
 

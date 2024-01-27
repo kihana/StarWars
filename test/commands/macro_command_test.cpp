@@ -25,7 +25,8 @@ class MacroCommandTest : public testing::Test {
 protected:
   void SetUp() override {
     movable_ = MakeMovable(2.0);
-    set_velocity_ = std::make_shared<SetVelocity>(movable_, core::Vector{-7, 3});
+    auto set_velocity_adapter = std::make_shared<VelocitySetableAdapter>(movable_);
+    set_velocity_ = std::make_shared<SetVelocity>(std::move(set_velocity_adapter), core::Vector{-7, 3});
     check_fuel_adapter_ = std::make_shared<CheckFuelAdapter>(movable_);
     check_fuel_ = std::make_shared<CheckFuel>(check_fuel_adapter_);
     burn_fuel_ = std::make_shared<BurnFuel>(std::make_shared<BurnFuelAdapter>(movable_));
