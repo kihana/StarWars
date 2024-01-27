@@ -21,8 +21,11 @@ add_executable(
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/include/Common.cmake)
 
 find_package(GTest REQUIRED)
+find_package(di REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE commands GTest::gtest_main)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${di_INCLUDE_DIR})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "test")
 

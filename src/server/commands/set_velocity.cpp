@@ -7,8 +7,8 @@
 
 namespace server::commands {
 
-VelocitySetableAdapter::VelocitySetableAdapter(const std::shared_ptr<core::Object>& velocity_setable)
-    : Adapter(velocity_setable) {
+VelocitySetableAdapter::VelocitySetableAdapter(std::shared_ptr<core::Object> velocity_setable)
+    : Adapter(std::move(velocity_setable)) {
 }
 
 std::string_view VelocitySetableAdapter::GetAdapterName() const {
@@ -23,19 +23,15 @@ void VelocitySetableAdapter::SetVelocity(const core::Vector value) {
   SetValue(kVelocityName, value);
 }
 
-SetVelocity::SetVelocity(const std::shared_ptr<core::Object>& velocity_setable, const core::Vector velocity)
-    : velocity_setable_(std::make_unique<VelocitySetableAdapter>(velocity_setable)), velocity_(velocity) {
-}
-
-SetVelocity::SetVelocity(std::shared_ptr<VelocitySetable> velocity_setable, const core::Vector velocity)
-    : velocity_setable_(std::move(velocity_setable)), velocity_(velocity) {
+SetVelocity::SetVelocity(std::shared_ptr<VelocitySetable> adapter, const core::Vector velocity)
+    : adapter_(std::move(adapter)), velocity_(velocity) {
 }
 
 void SetVelocity::Execute() {
-  if (!velocity_setable_)
+  if (!adapter_)
     throw sw::Exception(std::format("'{}' is unavailable.", kSetVelocityAdapterName));
 
-  velocity_setable_->SetVelocity(velocity_);
+  adapter_->SetVelocity(velocity_);
 }
 
 } // namespace server::commands
